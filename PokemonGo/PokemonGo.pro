@@ -12,7 +12,8 @@ SOURCES += \
     coordenada.cpp \
     aed2/ConjAcotado.cpp \
     tests.cpp \
-    juego.cpp
+    juego.cpp \
+    colaprior.cpp
 
 HEADERS += \
     Mapa.h \
@@ -26,7 +27,8 @@ HEADERS += \
     aed2/Vector.h \
     mini_test.h \
     aed2/Lista.h \
-    Juego.h
+    Juego.h \
+    ColaPrior.h
 
 DISTFILES += \
     PokemonGo.pro.user

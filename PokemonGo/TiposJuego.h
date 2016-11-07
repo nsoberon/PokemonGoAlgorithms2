@@ -8,15 +8,10 @@
 #include "aed2/Dicc.h"
 #include "aed2/Vector.h"
 #include "aed2/Arreglo.h"
+#include "ColaPrior.h"
 
 typedef unsigned int Jugador;
 typedef std::string Pokemon;
- 
-struct Tupla{
-    aed2::Nat primero;
-    aed2::Nat segundo;
-    Tupla(aed2::Nat primero, aed2::Nat segundo) : primero(primero), segundo(segundo){}
-};
 
 /*struct Coordenada
 {
