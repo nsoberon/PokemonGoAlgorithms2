@@ -14,7 +14,7 @@ class Mapa {
 
     aed2::Nat latitudMax;
     aed2::Nat longitudMax;
-    //aed2::Conj<Coordenada> coordenadasMapa;
+    aed2::Conj<Coordenada> coordenadasMapa;
     aed2::Lista<aed2::Nat> caminos;
     aed2::Nat marca;
 

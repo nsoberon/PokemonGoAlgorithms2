@@ -63,6 +63,6 @@ Coordenada Coordenada::coordenadaALaIzquierda(){
     res.crearCoor(this->latitud(), this->longitud()-1);
     return res;
 }
-bool operator == (Coordenada& c1,  Coordenada& c2){
+bool operator== (Coordenada& c1,  Coordenada& c2){
  return c1.latitud() == c2.latitud() && c1.longitud() == c2.longitud();
 }

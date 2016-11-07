@@ -44,6 +44,7 @@ void Mapa::agregarCoor(Coordenada c){
 
         // VER COMO RESUELVO LA PARTE DE MIGRAR LOS CAMINOS VIEJOS A LOS CAMINOS NUEVOS
     }
+    //this->coordenadasMapa.Agregar(c);
 }
 
 
