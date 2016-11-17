@@ -42,7 +42,7 @@ class Conj
 
     bool Pertenece(const T& e) const;
 
-    Nat Cardinal() const;
+    int Cardinal() const;
 
     Iterador CrearIt();
     const_Iterador CrearIt() const;
@@ -177,7 +177,7 @@ bool Conj<T>::Pertenece(const T& e) const{
 }
 
 template<class T>
-Nat Conj<T>::Cardinal() const{
+int Conj<T>::Cardinal() const{
     return dicc_.CantClaves();
 }
 

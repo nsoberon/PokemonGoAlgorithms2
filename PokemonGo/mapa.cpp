@@ -1,5 +1,6 @@
 #include "Mapa.h"
-
+#include <iostream>
+using namespace std;
 
 Mapa::Mapa(){
 
@@ -10,54 +11,106 @@ Mapa::~Mapa(){
 }
 
 void Mapa::crearMapa(){
-    aed2::Lista<aed2::Nat> caminos;
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>>* matriz = new aed2::Arreglo<aed2::Arreglo<aed2::Nat>>(1);
+    aed2::Conj<Coordenada>* coordenadas = new aed2::Conj<Coordenada>;
+    matriz->Definir(0,0);
+    this->coordenadasM = *coordenadas;
     this->latitudMax = 0;
     this->longitudMax = 0;
-    this->caminos = caminos;
-    this->marca = 0;
+    this->matrizCaminos = *matriz;
+    this->marca = 1;
     }
 
 void Mapa::agregarCoor(Coordenada c){
-    aed2::Nat latVieja = this->latitudMax;
-    aed2::Nat longVieja = this->longitudMax;
-    // Actualizo la latitud y longitud maxima
-    if(c.latitud() > latVieja){
+    bool cambioLatitud = false;
+    bool cambioLongitud = false;
+    aed2::Nat latitudAnterior = this->latitudMax;
+    aed2::Nat longitudAnterior = this->longitudMax;
+    if(c.latitud() > latitudAnterior){
         this->latitudMax = c.latitud();
+        cambioLatitud = true;
     }
-    if(c.longitud() > longVieja){
+    if(c.longitud() > longitudAnterior){
         this->longitudMax = c.longitud();
+        cambioLongitud = true;
     }
-    // Miro si hay que actualizar el vector de caminos
-    aed2::Nat tam = this->latitudMax * this->longitudMax;
-    if(tam > this->caminos.Longitud()){
-        aed2::Lista<aed2::Nat>* nuevosCaminos = new aed2::Lista<aed2::Nat>[tam];
-        aed2::Lista<aed2::Nat>::Iterador itCaminos = nuevosCaminos->CrearIt();
-        aed2::Nat tamViejo = this->caminos.Longitud();
-        while(itCaminos.HaySiguiente()){
-            itCaminos.Siguiente() = 0;
-            itCaminos.Avanzar();
+    if(cambioLongitud){
+        this->matrizCaminos.Redimensionar(c.longitud() + 1);
+        if(cambioLatitud){
+            int j = 0;
+            while(j <= longitudAnterior){
+                this->matrizCaminos[j].Redimensionar(c.latitud() + 1);
+                this->matrizCaminos[j].Definir(c.latitud(), 0);
+                j++;
+            }
         }
-        // Creo un iterador de las coordenadas
-        // posVieja = pos(Siguiente(i)) pero con la latitud y longitud max anterior
-        // Buscar posNueva = pos(Siguiente(i))
-        // nuevosCaminos[posNueva] = this.caminos[posvieja]
-
-        // VER COMO RESUELVO LA PARTE DE MIGRAR LOS CAMINOS VIEJOS A LOS CAMINOS NUEVOS
+        aed2::Arreglo<aed2::Nat>* nuevoArreglo = new aed2::Arreglo<aed2::Nat>(this->matrizCaminos[0].Tamanho() + 1);
+        int k = 0;
+        while(k < nuevoArreglo->Tamanho()){
+            nuevoArreglo->Definir(k,0);
+            k++;
+        }
+        this->matrizCaminos.Definir(c.longitud(), *nuevoArreglo);
+        aed2::Nat i = longitudAnterior + 1;
+        while(i < this->matrizCaminos.Tamanho()){
+            if(i != c.longitud()){
+                if(!this->matrizCaminos.Definido(i)){
+                    this->matrizCaminos.Definir(i, *nuevoArreglo);
+                }else{
+                    this->matrizCaminos[i] = *nuevoArreglo;
+                }
+            }
+            i++;
+        }
+    }else{
+        if(cambioLatitud){
+            int j = 0;
+            while(j < this->longitudMax){
+                this->matrizCaminos[j].Redimensionar(c.latitud() + 1);
+                j++;
+            }
+        }else{
+            if(!this->matrizCaminos[c.longitud()].Definido(c.latitud())){
+                this->matrizCaminos[c.longitud()].Definir(c.latitud(), 0);
+            }else{
+                this->matrizCaminos[c.longitud()][c.latitud()] = 0;
+            }
+        }
     }
-    //this->coordenadasMapa.Agregar(c);
+    for(int i = 0; i < this->matrizCaminos.Tamanho(); i ++){
+        for(int j = 0; j < this->matrizCaminos[i].Tamanho(); j++){
+            if(!this->matrizCaminos[i].Definido(j)){
+                this->matrizCaminos[i].Definir(j,0);
+            }
+        }
+    }
+    aed2::Arreglo<aed2::Nat> vecinosCoor = this->vecinos(c);
+    if(vecinosCoor.Tamanho() == 0){
+        this->matrizCaminos[c.longitud()][c.latitud()] = this->marca;
+        this->marca ++;
+    }else if(vecinosCoor.Tamanho() == 1){
+        //aed2::Nat nico1 = vecinosCoor[0];
+        this->matrizCaminos[c.longitud()][c.latitud()] = vecinosCoor[0];
+    }else{
+        this->marcarVecinos(vecinosCoor[0], vecinosCoor);
+        this->matrizCaminos[c.longitud()][c.latitud()] = vecinosCoor[0];
+    }
+    aed2::Nat nico = this->matrizCaminos[c.longitud()][c.latitud()];
+    this->coordenadasM.Agregar(c);
 }
 
 
-/*aed2::Conj<Coordenada> Mapa::coordenadas(){
-    return this->coordenadasMapa;
+aed2::Conj<Coordenada> Mapa::coordenadas(){
+    return this->coordenadasM;
 }
-*/
+
 bool Mapa::posExistente(Coordenada c){
-    //return this->coordenadas().Pertenece(c);
+    return this->coordenadas().Pertenece(c);
 }
 
 bool Mapa::hayCamino(Coordenada c, Coordenada c1){
-    return true;
+    assert(this->posExistente(c) && this->posExistente(c1));
+    return this->matrizCaminos[c.longitud()][c.latitud()] == this->matrizCaminos[c1.longitud()][c1.latitud()];
 }
 
 aed2::Nat Mapa::maximaLatitud(){
@@ -68,14 +121,69 @@ aed2::Nat Mapa::maximaLongitud(){
     return this->longitudMax;
 }
 
-aed2::Nat Mapa::pos(Coordenada c){
-    return (c.latitud() - 1) * this->longitudMax + (c.longitud() - 1);
+
+aed2::Arreglo<aed2::Nat> Mapa::vecinos(Coordenada c){
+    aed2::Lista<Coordenada> vecinos;
+    if(this->posExistente(c.coordenadaArriba())){
+        vecinos.AgregarAtras(c.coordenadaArriba());
+    }
+    if(this->posExistente(c.coordenadaAbajo())){
+        vecinos.AgregarAtras(c.coordenadaAbajo());
+    }
+    if(this->posExistente(c.coordenadaALaDerecha())){
+        vecinos.AgregarAtras(c.coordenadaALaDerecha());
+    }
+    if(this->posExistente(c.coordenadaALaIzquierda())){
+        vecinos.AgregarAtras(c.coordenadaALaIzquierda());
+    }
+    aed2::Arreglo<aed2::Nat>* res = new aed2::Arreglo<aed2::Nat> (vecinos.Longitud());
+    aed2::Lista<Coordenada>::Iterador itVecinos = vecinos.CrearIt();
+    aed2::Nat i = 0;
+    while(itVecinos.HaySiguiente()){
+        aed2::Nat lat = itVecinos.Siguiente().latitud();
+        aed2::Nat lon = itVecinos.Siguiente().longitud();
+        res->Definir(i, this->matrizCaminos[lon][lat]);
+        itVecinos.Avanzar();
+        i++;
+    }
+    return *res;
+
 }
 
-aed2::Lista<Coordenada> Mapa::vecinos(Coordenada c){
-
+void Mapa::marcarVecinos(aed2::Nat color, aed2::Arreglo<aed2::Nat> pinto){
+    Coordenada c;
+    for(int i = 0; i < this->matrizCaminos.Tamanho(); i++){
+        for(int j = 0; j < this->matrizCaminos[i].Tamanho(); j++){
+            c.crearCoor(j,i);
+            if(this->posExistente(c)){
+                aed2::Nat elem = this->matrizCaminos[i][j];
+                bool esta = false;
+                for(int k = 0; k < pinto.Tamanho(); k ++){
+                    aed2::Nat bug = pinto[k];
+                    if(pinto[k] == elem){
+                        esta = true;
+                        break;
+                    }
+                }
+                if(esta && elem != color){
+                    this->matrizCaminos[i][j] = color;
+                }
+            }
+        }
+    }
 }
 
-void Mapa::pintarVecinos(aed2::Nat color, aed2::Nat pinto){
+bool Mapa::operator == (const Mapa& m) const{
+    bool res = true;
+    res = res && (this->latitudMax == m.latitudMax);
+    res = res && (this->longitudMax == m.longitudMax);
+    res = res && (this->marca == m.marca);
+    res = res && (this->coordenadasM == m.coordenadasM);
+}
 
+
+// BORRAR ES PARA TEST
+
+aed2::Arreglo<aed2::Arreglo<aed2::Nat>> Mapa::verMatriz(){
+    return this->matrizCaminos;
 }

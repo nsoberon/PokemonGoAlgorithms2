@@ -8,16 +8,17 @@
 #include "aed2/Dicc.h"
 #include "aed2/Vector.h"
 #include "aed2/Arreglo.h"
-#include "ColaPrior.h"
+#include "ColaPrior.hpp"
+#include "DiccString.hpp"
 
 typedef unsigned int Jugador;
 typedef std::string Pokemon;
 
 /*struct Coordenada
 {
-	Nat latitud;
-	Nat longitud;
-	Coordenada(Nat latitud, Nat longitud) : latitud(latitud), longitud(longitud)
+    Nat latitud;
+    Nat longitud;
+    Coordenada(Nat latitud, Nat longitud) : latitud(latitud), longitud(longitud)
 	{
 	}
 };

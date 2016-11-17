@@ -1,7 +1,8 @@
 #include "Coordenada.h"
 
 Coordenada::Coordenada(){
-
+    this->latitudC =0;
+    this->longitudC =0;
 }
 
 Coordenada::~Coordenada(){
@@ -12,11 +13,11 @@ void Coordenada::crearCoor(aed2::Nat x, aed2::Nat y){
     this->longitudC = y;
 }
 
-aed2::Nat Coordenada::latitud(){
+aed2::Nat Coordenada::latitud() const{
     return this->latitudC;
 }
 
-aed2::Nat Coordenada::longitud(){
+aed2::Nat Coordenada::longitud() const{
     return this->longitudC;
 }
 
@@ -63,6 +64,12 @@ Coordenada Coordenada::coordenadaALaIzquierda(){
     res.crearCoor(this->latitud(), this->longitud()-1);
     return res;
 }
-bool operator== (Coordenada& c1,  Coordenada& c2){
- return c1.latitud() == c2.latitud() && c1.longitud() == c2.longitud();
+
+bool Coordenada::operator == (const Coordenada& c) const{
+    return this->latitud() == c.latitud() && this->longitud() == c.longitud();
 }
+
+//bool operator != (const Coordenada& c1, const Coordenada& c2){
+ //return not (c1 == c2);
+//}
+

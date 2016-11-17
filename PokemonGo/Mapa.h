@@ -14,12 +14,15 @@ class Mapa {
 
     aed2::Nat latitudMax;
     aed2::Nat longitudMax;
-    aed2::Conj<Coordenada> coordenadasMapa;
-    aed2::Lista<aed2::Nat> caminos;
+    aed2::Conj<Coordenada> coordenadasM;
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>> matrizCaminos;
     aed2::Nat marca;
 
 
-  public:
+    aed2::Arreglo<aed2::Nat> vecinos(Coordenada);
+    void marcarVecinos(aed2::Nat, aed2::Arreglo<aed2::Nat>);
+
+public:
 
   // Constructor y destructor
     Mapa();
@@ -31,17 +34,19 @@ class Mapa {
     void agregarCoor(Coordenada);
 
   // Observadores básicos
-    //aed2::Conj<Coordenada> coordenadas();
+    aed2::Conj<Coordenada> coordenadas();
 
   // Otras operaciones
     bool posExistente(Coordenada);
     bool hayCamino(Coordenada, Coordenada);
     aed2::Nat maximaLatitud();
     aed2::Nat maximaLongitud();
-    aed2::Nat pos(Coordenada);
-    aed2::Lista<Coordenada> vecinos(Coordenada);
-    void pintarVecinos(aed2::Nat, aed2::Nat);
 
+    // BORRAR ES SOLO PARA TEST
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>> verMatriz();
+    // BORRAR ES SOLO PARA TEST
+
+    bool operator == (const Mapa & m) const;
 };
 
 

@@ -8,38 +8,35 @@
 class Juego{
     private:
 
-
-        struct DatosPokemon{
-            Pokemon pokemon;
-            aed2::Nat cantidad;
-            DatosPokemon(Pokemon p, aed2::Nat c){
-                pokemon = p;
-                cantidad = c;
-            };
-        };
-
-        struct DatosPokemonSalvaje{
-            // Cambiar el tipo nat de la cola de prioridad por Juego::JugadorEsperando
-            // Pero ahora lo dejo asi porque como no esta hecha la cola pincha
-            Pokemon pokemon;
-            Coordenada posicion;
-            ColaPrior<aed2::Nat> jugadoresEsperando;
-            aed2::Nat cantidadMovimientos;
-            DatosPokemonSalvaje(Pokemon p, Coordenada c, ColaPrior<aed2::Nat> jc, aed2::Nat cm){
-                pokemon = p;
-                posicion = c;
-                jugadoresEsperando = jc;
-                cantidadMovimientos = cm;
-            };
-        };
-
         struct JugadorEsperando{
             Jugador jugador;
             aed2::Nat cantidadPokemonsAtrapados;
-            JugadorEsperando(Jugador j, aed2::Nat c){
+            JugadorEsperando(){
+
+            };
+            void crearJugadorEsperando(Jugador j, aed2::Nat c){
                 jugador = j;
                 cantidadPokemonsAtrapados = c;
+            }
+
+            bool operator < (const JugadorEsperando & c) const{
+                return this->cantidadPokemonsAtrapados < c.cantidadPokemonsAtrapados;
+            }
+        };
+
+        struct DatosPokemonSalvaje{
+            Pokemon pokemon;
+            Coordenada posicion;
+            ColaPrior<Juego::JugadorEsperando> jugadoresEsperando;
+            aed2::Nat cantidadMovimientos;
+            DatosPokemonSalvaje(){
             };
+            void crearDatosPokeSalv(Pokemon p, Coordenada c, ColaPrior<Juego::JugadorEsperando> cp){
+                pokemon = p;
+                posicion = c;
+                jugadoresEsperando = cp;
+                cantidadMovimientos = 0;
+            }
         };
 
         struct DatosJugador {
@@ -47,31 +44,52 @@ class Juego{
             aed2::Nat sanciones;
             Coordenada posicion;
             bool conectado;
-            // Pasarlo a multiconjunto
-            aed2::Conj<Juego::DatosPokemon> pokemonsCapturados;
+            DiccString<aed2::Nat> pokemonsCapturados;
+            aed2::Nat cantidadPokemonsAtrapados;
             bool banneado;
-            Juego::JugadorEsperando* esperandoParaCapturar;
-            DatosJugador(aed2::Nat i, aed2::Nat s, Coordenada p, bool c, aed2::Conj<DatosPokemon> pc, bool b, Juego::JugadorEsperando* je){
+            ColaPrior<Juego::JugadorEsperando>::Iterador esperandoParaCapturar;
+            aed2::Conj<aed2::Nat>::Iterador referenciaConjunto;
+            DatosJugador(aed2::Nat i, aed2::Conj<aed2::Nat>::Iterador refConj){
                 id = i;
-                sanciones = s;
-                posicion = p;
-                conectado = c;
-                pokemonsCapturados = pc;
-                banneado = b;
-                esperandoParaCapturar = je;
+                sanciones = 0;
+                Coordenada c;
+                c.crearCoor(0,0);
+                posicion = c;
+                conectado = false;
+                DiccString<aed2::Nat> pokeCap;
+                pokemonsCapturados = pokeCap;
+                cantidadPokemonsAtrapados = 0;
+                banneado = false;
+                ColaPrior<Juego::JugadorEsperando>::Iterador colaPoke;
+                esperandoParaCapturar = colaPoke;
+                referenciaConjunto = refConj;
             };
         };
 
-        // Falta el vector con lso dats jugador, hay que crear el tipo tupla
-        aed2::Conj<Jugador> jugadoresAgregados;
+        struct JugadorPokemonEnMapa{
+            Juego::DatosJugador* jugador;
+            Juego::DatosPokemonSalvaje* pokemon;
+            JugadorPokemonEnMapa(Juego::DatosJugador* j, Juego::DatosPokemonSalvaje* p){
+                jugador = j;
+                pokemon = p;
+            };
+        };
+
+        aed2::Vector<Juego::DatosJugador> jugadoresVector;
+        aed2::Conj<aed2::Nat> jugadoresConjunto;
         aed2::Conj<Coordenada> posicionesPokemons;
-        aed2::Dicc<Pokemon, aed2::Nat> pokemonsCantidades;
-        // Falta jugadoresPokemonsMapa hay que crear el tipo arreglo redimensionable
-        // Falta pokemonsSalvajes
+        DiccString<aed2::Nat> pokemonsCantidades;
+        aed2::Arreglo<Juego::JugadorPokemonEnMapa> jugadoresPokemonsMapa;
+        aed2::Lista<Juego::DatosPokemonSalvaje> pokemonsSalvajes;
         Mapa mapaJuego;
         aed2::Nat cantidadTotalPokemons;
         aed2::Nat cantidadFilas;
         aed2::Nat cantidadColumnas;
+
+        aed2::Lista<Juego::DatosJugador> jugadoresADistancia(aed2::Nat, Coordenada);
+        aed2::Lista<Juego::DatosPokemonSalvaje> pokemonsADistancia(aed2::Nat, Coordenada);
+        aed2::Conj<Jugador> expulsadosAux(aed2::Vector<Juego::DatosJugador>);
+        aed2::Conj<Jugador> jugadoresAux(aed2::Vector<Juego::DatosJugador>);
 
     public:
 
@@ -80,16 +98,16 @@ class Juego{
 
         void crearJuego(Mapa);
         void agregarPokemon(Pokemon, Coordenada);
-        void agregarJugador(Jugador);
+        void agregarJugador();
         void conectarse(Jugador, Coordenada);
         void desconectarse(Jugador);
         void moverse(Jugador, Coordenada);
         Mapa mapa();
-        aed2::Conj<Jugador> jugadores();
+        aed2::Conj<Jugador>::Iterador jugadores();
         bool estaConectado(Jugador);
         aed2::Nat sanciones(Jugador);
         Coordenada posicion(Jugador);
-        // Falta pokemons que devuelve el iterador
+        DiccString<aed2::Nat>::Iterador pokemons(Jugador);
         aed2::Conj<Jugador> expulsados();
         aed2::Conj<Coordenada> posConPokemons();
         Pokemon pokemonsEnPos(Coordenada);

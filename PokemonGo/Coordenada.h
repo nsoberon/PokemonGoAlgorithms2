@@ -25,8 +25,8 @@ class Coordenada{
     void crearCoor(aed2::Nat, aed2::Nat);
 
     // Observadores básicos
-    aed2::Nat latitud();
-    aed2::Nat longitud();
+    aed2::Nat latitud() const;
+    aed2::Nat longitud() const;
 
     // Otras operaciones
     aed2::Nat distEuclidea(Coordenada);
@@ -34,6 +34,7 @@ class Coordenada{
     Coordenada coordenadaAbajo();
     Coordenada coordenadaALaDerecha();
     Coordenada coordenadaALaIzquierda();
+    bool operator == (const Coordenada & c) const;
 };
 
 #endif // COORDENADA_H
