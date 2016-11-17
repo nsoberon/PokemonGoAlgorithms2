@@ -78,7 +78,9 @@ class DiccString {
                     Iterador();
 
                     DiccString<T>::Iterador crearIt(DiccString<T>);
-
+                    bool haySiguiente();
+                    T siguiente();
+                    void avanzar();
 
                   private:
 
@@ -147,6 +149,21 @@ DiccString<T>::~DiccString(){
 template <typename T>
 typename DiccString<T>::Iterador DiccString<T>::Iterador::crearIt(DiccString<T> d){
      this->it_dicc_ = d.Claves().CrearIt();
+}
+
+template <typename T>
+bool DiccString<T>::Iterador::haySiguiente(){
+    return this->haySiguiente();
+}
+
+template <typename T>
+T DiccString<T>::Iterador::siguiente(){
+    return this->siguiente();
+}
+
+template <typename T>
+void DiccString<T>::Iterador::avanzar(){
+    return this->avanzar();
 }
 
 template <typename T>

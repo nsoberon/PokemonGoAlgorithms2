@@ -22,6 +22,10 @@ class Juego{
             bool operator < (const JugadorEsperando & c) const{
                 return this->cantidadPokemonsAtrapados < c.cantidadPokemonsAtrapados;
             }
+
+            bool operator > (const JugadorEsperando & c) const{
+                return this->cantidadPokemonsAtrapados > c.cantidadPokemonsAtrapados;
+            }
         };
 
         struct DatosPokemonSalvaje{
@@ -49,7 +53,9 @@ class Juego{
             bool banneado;
             ColaPrior<Juego::JugadorEsperando>::Iterador esperandoParaCapturar;
             aed2::Conj<aed2::Nat>::Iterador referenciaConjunto;
-            DatosJugador(aed2::Nat i, aed2::Conj<aed2::Nat>::Iterador refConj){
+            DatosJugador(){
+            };
+            void crearDatosJugador(aed2::Nat i, aed2::Conj<aed2::Nat>::Iterador refConj){
                 id = i;
                 sanciones = 0;
                 Coordenada c;
@@ -63,16 +69,18 @@ class Juego{
                 ColaPrior<Juego::JugadorEsperando>::Iterador colaPoke;
                 esperandoParaCapturar = colaPoke;
                 referenciaConjunto = refConj;
-            };
+            }
         };
 
         struct JugadorPokemonEnMapa{
             Juego::DatosJugador* jugador;
             Juego::DatosPokemonSalvaje* pokemon;
-            JugadorPokemonEnMapa(Juego::DatosJugador* j, Juego::DatosPokemonSalvaje* p){
+            JugadorPokemonEnMapa(){
+            };
+            void crearJugadorEnMapa(Juego::DatosJugador* j, Juego::DatosPokemonSalvaje* p){
                 jugador = j;
                 pokemon = p;
-            };
+            }
         };
 
         aed2::Vector<Juego::DatosJugador> jugadoresVector;

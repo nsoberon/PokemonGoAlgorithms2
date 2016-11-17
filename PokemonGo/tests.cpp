@@ -221,14 +221,43 @@ void test_juego_agregar_jugador(){
 void test_juego_conectar_desconectar(){
     Juego j;
     Jugador nico = 0;
+    Mapa m;
+    m.crearMapa();
     Coordenada c;
-    c.crearCoor(0,0);
+    c.crearCoor(1,1);
+    m.agregarCoor(c);
+    j.crearJuego(m);
     j.agregarJugador();
     ASSERT(!j.estaConectado(nico));
     j.conectarse(nico,c);
     ASSERT(j.estaConectado(nico));
     j.desconectarse(nico);
     ASSERT(!j.estaConectado(nico));
+}
+
+void test_juego_agregar_pokemon(){
+    Mapa m;
+    m.crearMapa();
+    Coordenada d;
+    d.crearCoor(10,10);
+    Coordenada f;
+    f.crearCoor(1,1);
+    Coordenada h;
+    h.crearCoor(1,2);
+    m.agregarCoor(d);
+    m.agregarCoor(f);
+    m.agregarCoor(h);
+    Juego j;
+    Coordenada e;
+    e.crearCoor(1,2);
+    j.crearJuego(m);
+    j.agregarJugador();
+    j.conectarse(0,e);
+    Pokemon p = "pikachu";
+    Coordenada c;
+    c.crearCoor(1,1);
+    j.agregarPokemon(p, c);
+    ASSERT(j.cantPokemonsTotales() == 1);
 }
 
 int main() {
@@ -252,6 +281,7 @@ int main() {
     RUN_TEST(test_juego_vacio);
     RUN_TEST(test_juego_agregar_jugador);
     RUN_TEST(test_juego_conectar_desconectar);
+    RUN_TEST(test_juego_agregar_pokemon);
 
     return 0;
 

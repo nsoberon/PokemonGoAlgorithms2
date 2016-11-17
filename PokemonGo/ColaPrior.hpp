@@ -64,6 +64,7 @@ class ColaPrior{
                 ~Iterador();
                 ColaPrior<T>::Iterador CrearIterador(ColaPrior<T>, ColaPrior<T>::Nodo*);
                 void EliminarSiguiente();
+                bool HaySiguiente();
         };
 
         ColaPrior<T>::Iterador Encolar(T);
@@ -198,18 +199,20 @@ void ColaPrior<T>::Iterador::EliminarSiguiente(){
     ultimo->izq = elem->izq;
     ultimo->der = elem->der;
     ultimo->padre = elem->padre;
+    // VER QUE PASA S EL ELEM ES LA RAIZ NO TENDRIA PADRE
+
     if(elem->padre->der == elem){
         elem->padre->der = NULL;
     }else{
         elem->padre->izq = NULL;
     }
     Nodo* actual = ultimo;
-    ColaPrior<T> cp = this->cola;
+    ColaPrior<T>* cp = this->cola;
     while((actual->izq && actual->dato > actual->izq->dato) || actual->der && (actual->dato > actual->der->dato)){
-        if(!actual->der || actual->izq < actual->dato){
-            cp.Intercambiar(actual, actual->izq);
+        if(!actual->der || actual->izq->dato < actual->dato){
+            cp->Intercambiar(actual, actual->izq);
         }else{
-            cp.Intercambiar(actual, actual->der);
+            cp->Intercambiar(actual, actual->der);
         }
 
     }
@@ -217,24 +220,34 @@ void ColaPrior<T>::Iterador::EliminarSiguiente(){
 };
 
 template< typename T>
+bool ColaPrior<T>::Iterador::HaySiguiente(){
+    return this->siguiente;
+}
+
+
+template< typename T>
 typename ColaPrior<T>::Nodo* ColaPrior<T>::ultimoNodo(){
-    aed2::Lista<aed2::Nat> listaLog;
-    aed2::Nat tam = this->tam;
-    while(tam > 1){
-        listaLog.AgregarAdelante(tam % 2);
-        tam = tam/2;
-    }
-    aed2::Lista<aed2::Nat>::Iterador it = listaLog.CrearIt();
-    Nodo* actual = this->cabeza;
-    while(it.HaySiguiente()){
-        if(it.Siguiente() == 0){
-            actual = actual->izq;
-        }else{
-            actual = actual->der;
+    if(this->tam == 1){
+        return this->cabeza;
+    }else{
+        aed2::Lista<aed2::Nat> listaLog;
+        aed2::Nat tam = this->tam;
+        while(tam > 1){
+            listaLog.AgregarAdelante(tam % 2);
+            tam = tam/2;
         }
-    it.Avanzar();
+        aed2::Lista<aed2::Nat>::Iterador it = listaLog.CrearIt();
+        Nodo* actual = this->cabeza;
+        while(it.HaySiguiente()){
+            if(it.Siguiente() == 0){
+                actual = actual->izq;
+            }else{
+                actual = actual->der;
+            }
+        it.Avanzar();
+        }
+        return actual;
     }
-    return actual;
 };
 
 template< typename T>

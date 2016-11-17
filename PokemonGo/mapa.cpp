@@ -12,8 +12,10 @@ Mapa::~Mapa(){
 
 void Mapa::crearMapa(){
     aed2::Arreglo<aed2::Arreglo<aed2::Nat>>* matriz = new aed2::Arreglo<aed2::Arreglo<aed2::Nat>>(1);
+    aed2::Arreglo<aed2::Nat>* matrizY = new aed2::Arreglo<aed2::Nat>(1) ;
     aed2::Conj<Coordenada>* coordenadas = new aed2::Conj<Coordenada>;
-    matriz->Definir(0,0);
+    matrizY->Definir(0,0);
+    matriz->Definir(0,*matrizY);
     this->coordenadasM = *coordenadas;
     this->latitudMax = 0;
     this->longitudMax = 0;
