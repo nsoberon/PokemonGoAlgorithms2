@@ -57,16 +57,18 @@ class ColaPrior{
 
                 ColaPrior<T>::Nodo* siguiente;
                 ColaPrior<T>* cola;
+                friend class ColaPrior;
 
         public:
 
                 Iterador();
                 ~Iterador();
-                ColaPrior<T>::Iterador CrearIterador(ColaPrior<T>, ColaPrior<T>::Nodo*);
                 void EliminarSiguiente();
                 bool HaySiguiente();
+                ColaPrior<T>::Nodo* Siguiente();
         };
 
+        ColaPrior<T>::Iterador CrearIterador(ColaPrior<T>::Nodo*);
         ColaPrior<T>::Iterador Encolar(T);
         aed2::Nat tam;
         ColaPrior<T>::Nodo* cabeza;
@@ -119,8 +121,7 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::Encolar(T elem){
         }
     }
     this->tam ++;
-    ColaPrior<T>::Iterador res;
-    res.CrearIterador(*this, nuevoNodo);
+    ColaPrior<T>::Iterador res = this->CrearIterador(nuevoNodo);
     return res;
 };
 
@@ -178,17 +179,16 @@ ColaPrior<T>::Iterador::~Iterador(){
 }
 
 template< typename T>
-typename ColaPrior<T>::Iterador ColaPrior<T>::Iterador::CrearIterador(ColaPrior<T> cp, ColaPrior<T>::Nodo* n){
+typename ColaPrior<T>::Iterador ColaPrior<T>::CrearIterador(ColaPrior<T>::Nodo* n){
     ColaPrior<T>::Iterador res;
     res.siguiente = n;
-    ColaPrior<T>* colaP = new ColaPrior<T>;
-    colaP = &cp;
-    res.cola = colaP;
+    res.cola = this;
     return res;
 }
 
 template< typename T>
 void ColaPrior<T>::Iterador::EliminarSiguiente(){
+    Nodo* ultimo = this->cola->ultimoNodo();
     Nodo* elem = this->siguiente;
     if(elem == this->cola->cabeza){
         this->cola->Desencolar();
@@ -292,5 +292,10 @@ if(!hijo->padre){
     this->cabeza = hijo;
 }
 };
+
+template< typename T>
+typename ColaPrior<T>::Nodo* ColaPrior<T>::Iterador::Siguiente(){
+    return this->siguiente;
+}
 
 #endif // COLAPRIOR_H

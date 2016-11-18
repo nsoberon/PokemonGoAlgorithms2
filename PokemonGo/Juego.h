@@ -94,8 +94,8 @@ class Juego{
         aed2::Nat cantidadFilas;
         aed2::Nat cantidadColumnas;
 
-        aed2::Lista<Juego::DatosJugador> jugadoresADistancia(aed2::Nat, Coordenada);
-        aed2::Lista<Juego::DatosPokemonSalvaje> pokemonsADistancia(aed2::Nat, Coordenada);
+        aed2::Lista<Juego::DatosJugador> jugadoresADistancia(aed2::Nat, Coordenada) const;
+        aed2::Lista<Juego::DatosPokemonSalvaje> pokemonsADistancia(aed2::Nat, Coordenada) const;
         aed2::Conj<Jugador> expulsadosAux(aed2::Vector<Juego::DatosJugador>);
         aed2::Conj<Jugador> jugadoresAux(aed2::Vector<Juego::DatosJugador>);
 
@@ -106,27 +106,27 @@ class Juego{
 
         void crearJuego(Mapa);
         void agregarPokemon(Pokemon, Coordenada);
-        void agregarJugador();
+        aed2::Nat agregarJugador();
         void conectarse(Jugador, Coordenada);
         void desconectarse(Jugador);
         void moverse(Jugador, Coordenada);
-        Mapa mapa();
-        aed2::Conj<Jugador>::Iterador jugadores();
-        bool estaConectado(Jugador);
-        aed2::Nat sanciones(Jugador);
-        Coordenada posicion(Jugador);
-        DiccString<aed2::Nat>::Iterador pokemons(Jugador);
-        aed2::Conj<Jugador> expulsados();
-        aed2::Conj<Coordenada> posConPokemons();
-        Pokemon pokemonsEnPos(Coordenada);
-        aed2::Nat cantidadMovimientosParaCapturar(Coordenada);
-        bool puedoAgregarPokemon(Coordenada);
-        bool hayPokemonCercano(Coordenada);
-        Coordenada posPokemonCercano(Coordenada);
-        aed2::Conj<Jugador> entrenadoresPosibles(Coordenada, aed2::Conj<Jugador>);
-        aed2::Nat indiceRareza(Pokemon);
-        aed2::Nat cantPokemonsTotales();
-        aed2::Nat cantMismaEspecie(Pokemon);
+        Mapa mapa() const;
+        aed2::Conj<Jugador>::const_Iterador jugadores() const;
+        bool estaConectado(Jugador) const;
+        aed2::Nat sanciones(Jugador) const;
+        Coordenada posicion(Jugador) const;
+        DiccString<aed2::Nat>::const_Iterador pokemons(Jugador) const;
+        aed2::Conj<Jugador> expulsados() const;
+        aed2::Conj<Coordenada> posConPokemons() const;
+        Pokemon pokemonsEnPos(Coordenada) const;
+        aed2::Nat cantidadMovimientosParaCapturar(Coordenada) const;
+        bool puedoAgregarPokemon(Coordenada) const;
+        bool hayPokemonCercano(Coordenada) const;
+        Coordenada posPokemonCercano(Coordenada) const;
+        aed2::Conj<Jugador> entrenadoresPosibles(Coordenada) const;
+        aed2::Nat indiceRareza(Pokemon) const;
+        aed2::Nat cantPokemonsTotales() const;
+        aed2::Nat cantMismaEspecie(Pokemon) const;
 };
 
 #endif // JUEGO_H

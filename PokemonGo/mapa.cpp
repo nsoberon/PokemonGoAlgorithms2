@@ -106,11 +106,19 @@ aed2::Conj<Coordenada> Mapa::coordenadas(){
     return this->coordenadasM;
 }
 
-bool Mapa::posExistente(Coordenada c){
-    return this->coordenadas().Pertenece(c);
+bool Mapa::posExistente(Coordenada c) const{
+    bool res = false;
+    aed2::Conj<Coordenada>::const_Iterador itConj = this->coordenadasM.CrearIt();
+    while(itConj.HaySiguiente()){
+        if(itConj.Siguiente() == c){
+            res = true;
+        }
+        itConj.Avanzar();
+    }
+    return res;
 }
 
-bool Mapa::hayCamino(Coordenada c, Coordenada c1){
+bool Mapa::hayCamino(Coordenada c, Coordenada c1) const{
     assert(this->posExistente(c) && this->posExistente(c1));
     return this->matrizCaminos[c.longitud()][c.latitud()] == this->matrizCaminos[c1.longitud()][c1.latitud()];
 }

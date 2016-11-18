@@ -86,11 +86,32 @@ class DiccString {
                     typename aed2::Conj<typename DiccString<T>::Tupla>::Iterador it_dicc_;
                     Iterador(DiccString<T>& c);
                     friend class DiccString<T>;
+                    friend class DiccString<T>::const_Iterador;
                 };
 
                 Iterador CrearIt();
 
 
+                class const_Iterador
+                {
+                  public:
+
+                    const_Iterador();
+
+                    bool HaySiguiente();
+                    typename DiccString<T>::Tupla Siguiente();
+                    void Avanzar();
+
+                  private:
+
+                    typename aed2::Conj<typename DiccString<T>::Tupla>::const_Iterador it_dicc_;
+                    const_Iterador(const DiccString<T>& c);
+                    friend class DiccString<T>;
+                    friend typename DiccString<T>::const_Iterador DiccString<T>::CrearIt() const;
+
+                };
+
+                const_Iterador CrearIt() const;
 
         private:
 
@@ -138,13 +159,28 @@ DiccString<T>::Iterador::Iterador(DiccString<T>& c)
   : it_dicc_( c.claves.CrearIt())
 {}
 
+template<class T>
+DiccString<T>::const_Iterador::const_Iterador(const DiccString<T>& c)
+  : it_dicc_( c.claves.CrearIt())
+{}
+
 template <typename T>
 typename DiccString<T>::Iterador DiccString<T>::CrearIt(){
      return Iterador(*this);
 }
 
 template <typename T>
+typename DiccString<T>::const_Iterador DiccString<T>::CrearIt() const{
+     return const_Iterador(*this);
+}
+
+template <typename T>
 bool DiccString<T>::Iterador::HaySiguiente(){
+    return it_dicc_.HaySiguiente();
+}
+
+template <typename T>
+bool DiccString<T>::const_Iterador::HaySiguiente(){
     return it_dicc_.HaySiguiente();
 }
 
@@ -154,7 +190,17 @@ typename DiccString<T>::Tupla DiccString<T>::Iterador::Siguiente(){
 }
 
 template <typename T>
+typename DiccString<T>::Tupla DiccString<T>::const_Iterador::Siguiente(){
+    return it_dicc_.Siguiente();
+}
+
+template <typename T>
 void DiccString<T>::Iterador::Avanzar(){
+    return it_dicc_.Avanzar();;
+}
+
+template <typename T>
+void DiccString<T>::const_Iterador::Avanzar(){
     return it_dicc_.Avanzar();;
 }
 
@@ -163,6 +209,11 @@ void DiccString<T>::Iterador::Avanzar(){
 template <typename T>
 DiccString<T>::Iterador::Iterador()
 {}
+
+template <typename T>
+DiccString<T>::const_Iterador::const_Iterador(){
+
+}
 
 template <typename T>
 DiccString<T>::DiccString()

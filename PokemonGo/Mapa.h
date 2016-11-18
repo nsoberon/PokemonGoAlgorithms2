@@ -37,8 +37,8 @@ public:
     aed2::Conj<Coordenada> coordenadas();
 
   // Otras operaciones
-    bool posExistente(Coordenada);
-    bool hayCamino(Coordenada, Coordenada);
+    bool posExistente(Coordenada) const;
+    bool hayCamino(Coordenada, Coordenada) const;
     aed2::Nat maximaLatitud();
     aed2::Nat maximaLongitud();
 

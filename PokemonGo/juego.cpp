@@ -62,12 +62,13 @@ void Juego::agregarPokemon(Pokemon p, Coordenada c){
     this->cantidadTotalPokemons ++;
 }
 
-void Juego::agregarJugador(){
+aed2::Nat Juego::agregarJugador(){
     aed2::Nat id = this->jugadoresVector.Longitud();
     aed2::Conj<aed2::Nat>::Iterador itReferencia = this->jugadoresConjunto.AgregarRapido(id);
     Juego::DatosJugador datosJ;
     datosJ.crearDatosJugador(id, itReferencia);
     this->jugadoresVector.AgregarAtras(datosJ);
+    return id;
 }
 
 void Juego::conectarse(Jugador j, Coordenada c){
@@ -104,7 +105,7 @@ void Juego::desconectarse(Jugador j){
     aed2::Nat e = lat * this->cantidadColumnas + lon;
     if(this->jugadoresPokemonsMapa.Definido(e)){
         if(this->jugadoresPokemonsMapa[e].jugador->esperandoParaCapturar.HaySiguiente()){
-            //this->jugadoresPokemonsMapa[e].jugador->esperandoParaCapturar.EliminarSiguiente();
+            this->jugadoresPokemonsMapa[e].jugador->esperandoParaCapturar.EliminarSiguiente();
         }
         Juego::JugadorPokemonEnMapa nuevoJug;
         nuevoJug.crearJugadorEnMapa(NULL, this->jugadoresPokemonsMapa[e].pokemon);
@@ -139,7 +140,7 @@ void Juego::moverse(Jugador j, Coordenada c){
                 aed2::Nat e = lat * this->cantidadColumnas + lon;
                 this->jugadoresPokemonsMapa[e].pokemon->cantidadMovimientos = 0;
                 ColaPrior<Juego::JugadorEsperando>::Iterador itJugadorABorrar = this->jugadoresVector[j].esperandoParaCapturar;
-                //itJugadorABorrar.EliminarSiguiente();
+                itJugadorABorrar.EliminarSiguiente();
                 Juego::JugadorEsperando jugNuevo;
                 jugNuevo.crearJugadorEsperando(j, this->jugadoresVector[j].cantidadPokemonsAtrapados);
                 this->jugadoresPokemonsMapa[e].pokemon->jugadoresEsperando.Encolar(jugNuevo);
@@ -153,7 +154,7 @@ void Juego::moverse(Jugador j, Coordenada c){
             }
             }else{
             ColaPrior<Juego::JugadorEsperando>::Iterador itJugadorABorrar = this->jugadoresVector[j].esperandoParaCapturar;
-            //itJugadorABorrar.EliminarSiguiente();
+            itJugadorABorrar.EliminarSiguiente();
             aed2::Lista<Juego::DatosPokemonSalvaje>::Iterador itPosPoke = this->pokemonsSalvajes.CrearIt();
             while(itPosPoke.HaySiguiente()){
                 itPosPoke.Siguiente().cantidadMovimientos ++;
@@ -210,37 +211,37 @@ void Juego::moverse(Jugador j, Coordenada c){
 
 }
 
-Mapa Juego::mapa(){
+Mapa Juego::mapa() const{
     return this->mapaJuego;
 }
 
-aed2::Conj<Jugador>::Iterador Juego::jugadores(){
-    aed2::Conj<Jugador>::Iterador res = this->jugadoresConjunto.CrearIt();
+aed2::Conj<Jugador>::const_Iterador Juego::jugadores() const{
+    aed2::Conj<Jugador>::const_Iterador res = this->jugadoresConjunto.CrearIt();
     return res;
 }
 
-bool Juego::estaConectado(Jugador j){
+bool Juego::estaConectado(Jugador j) const{
     assert(this->jugadoresConjunto.Pertenece(j));
     return this->jugadoresVector[j].conectado;
 }
 
-aed2::Nat Juego::sanciones(Jugador j){
+aed2::Nat Juego::sanciones(Jugador j) const{
     assert(this->jugadoresConjunto.Pertenece(j));
     return this->jugadoresVector[j].sanciones;
 }
 
-Coordenada Juego::posicion(Jugador j){
+Coordenada Juego::posicion(Jugador j) const{
     assert(this->jugadoresConjunto.Pertenece(j) && this->estaConectado(j));
     return this->jugadoresVector[j].posicion;
 }
 
-DiccString<aed2::Nat>::Iterador Juego::pokemons(Jugador j){
+DiccString<aed2::Nat>::const_Iterador Juego::pokemons(Jugador j) const{
     assert(this->jugadoresConjunto.Pertenece(j));
-    DiccString<aed2::Nat>::Iterador itPoke = this->jugadoresVector[j].pokemonsCapturados.CrearIt();
+    DiccString<aed2::Nat>::const_Iterador itPoke = this->jugadoresVector[j].pokemonsCapturados.CrearIt();
     return itPoke;
 }
 
-aed2::Conj<Jugador> Juego::expulsados(){
+aed2::Conj<Jugador> Juego::expulsados() const{
     aed2::Conj<Jugador> exp;
     for(int i = 0; i < this->jugadoresVector.Longitud(); i++){
         if(this->jugadoresVector[i].banneado){
@@ -250,12 +251,12 @@ aed2::Conj<Jugador> Juego::expulsados(){
     return exp;
 }
 
-aed2::Conj<Coordenada> Juego::posConPokemons(){
+aed2::Conj<Coordenada> Juego::posConPokemons() const{
 
     return this->posicionesPokemons;
 }
 
-Pokemon Juego::pokemonsEnPos(Coordenada c){
+Pokemon Juego::pokemonsEnPos(Coordenada c) const{
     assert(this->posicionesPokemons.Pertenece(c));
     aed2::Nat lat = c.latitud();
     aed2::Nat lon = c.longitud();
@@ -263,7 +264,7 @@ Pokemon Juego::pokemonsEnPos(Coordenada c){
     return this->jugadoresPokemonsMapa[e].pokemon->pokemon;
 }
 
-aed2::Nat Juego::cantidadMovimientosParaCapturar(Coordenada c){
+aed2::Nat Juego::cantidadMovimientosParaCapturar(Coordenada c) const{
     assert(this->posicionesPokemons.Pertenece(c));
     if(this->hayPokemonCercano(c)){
         Coordenada posPokeCercano = this->posPokemonCercano(c);
@@ -275,21 +276,21 @@ aed2::Nat Juego::cantidadMovimientosParaCapturar(Coordenada c){
 
 }
 
-bool Juego::puedoAgregarPokemon(Coordenada c){
+bool Juego::puedoAgregarPokemon(Coordenada c) const{
     return this->mapa().posExistente(c) && !this->hayPokemonCercano(c);
 }
 
-bool Juego::hayPokemonCercano(Coordenada c){
+bool Juego::hayPokemonCercano(Coordenada c) const{
     return this->pokemonsADistancia(4,c).Longitud() > 0;
 }
 
-Coordenada Juego::posPokemonCercano(Coordenada c){
+Coordenada Juego::posPokemonCercano(Coordenada c) const{
     assert(this->hayPokemonCercano(c));
     return this->pokemonsADistancia(4, c).Primero().posicion;
 }
 
-aed2::Conj<Jugador> Juego::entrenadoresPosibles(Coordenada c, aed2::Conj<Jugador> cj){
-    assert(this->hayPokemonCercano(c)); // falta agregar que cj esta incluido en los jugadores conectados
+aed2::Conj<Jugador> Juego::entrenadoresPosibles(Coordenada c) const{
+    assert(this->hayPokemonCercano(c)); // falta agregar que cj esta incluido en los  jugadores conectados
     aed2::Conj<Jugador> res;
     Coordenada pos = this->posPokemonCercano(c);
     aed2::Nat posPoke = pos.latitud() * this->cantidadColumnas + pos.longitud();
@@ -300,20 +301,20 @@ aed2::Conj<Jugador> Juego::entrenadoresPosibles(Coordenada c, aed2::Conj<Jugador
     // VER BIEN ESTA FUNCION
 }
 
-aed2::Nat Juego::indiceRareza(Pokemon p){
+aed2::Nat Juego::indiceRareza(Pokemon p) const{
     assert(this->pokemonsCantidades.Definido(p));
     return 100 - (100 * this->cantMismaEspecie(p) / this->cantPokemonsTotales());
 }
 
-aed2::Nat Juego::cantPokemonsTotales(){
+aed2::Nat Juego::cantPokemonsTotales() const{
     return this->cantidadTotalPokemons;
 }
 
-aed2::Nat Juego::cantMismaEspecie(Pokemon p){
+aed2::Nat Juego::cantMismaEspecie(Pokemon p) const{
     return this->pokemonsCantidades.Obtener(p);
 }
 
-aed2::Lista<Juego::DatosJugador> Juego::jugadoresADistancia(aed2::Nat d, Coordenada c){
+aed2::Lista<Juego::DatosJugador> Juego::jugadoresADistancia(aed2::Nat d, Coordenada c) const{
     aed2::Lista<Juego::DatosJugador> res;
     aed2::Nat lat = c.latitud();
     aed2::Nat lon = c.longitud();
@@ -360,7 +361,7 @@ aed2::Lista<Juego::DatosJugador> Juego::jugadoresADistancia(aed2::Nat d, Coorden
     return res;
 }
 
-aed2::Lista<Juego::DatosPokemonSalvaje> Juego::pokemonsADistancia(aed2::Nat d, Coordenada c){
+aed2::Lista<Juego::DatosPokemonSalvaje> Juego::pokemonsADistancia(aed2::Nat d, Coordenada c) const{
     aed2::Lista<Juego::DatosPokemonSalvaje> res;
     aed2::Nat lat = c.latitud();
     aed2::Nat lon = c.longitud();
