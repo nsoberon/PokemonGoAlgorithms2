@@ -35,6 +35,7 @@ class Coordenada{
     Coordenada coordenadaALaDerecha();
     Coordenada coordenadaALaIzquierda();
     bool operator == (const Coordenada & c) const;
+    bool operator != (const Coordenada& c) const;
 };
 
 #endif // COORDENADA_H

@@ -224,13 +224,23 @@ void test_juego_conectar_desconectar(){
     Mapa m;
     m.crearMapa();
     Coordenada c;
+    Coordenada d;
+    Coordenada f;
+    f.crearCoor(1,2);
     c.crearCoor(1,1);
+    d.crearCoor(2,2);
     m.agregarCoor(c);
+    m.agregarCoor(d);
+    m.agregarCoor(f);
     j.crearJuego(m);
     j.agregarJugador();
+    Pokemon p = "pikachu";
+    j.agregarPokemon(p, f);
     ASSERT(!j.estaConectado(nico));
     j.conectarse(nico,c);
     ASSERT(j.estaConectado(nico));
+    j.moverse(nico, d);
+
     j.desconectarse(nico);
     ASSERT(!j.estaConectado(nico));
 }

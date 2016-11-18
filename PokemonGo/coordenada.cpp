@@ -69,7 +69,7 @@ bool Coordenada::operator == (const Coordenada& c) const{
     return this->latitud() == c.latitud() && this->longitud() == c.longitud();
 }
 
-//bool operator != (const Coordenada& c1, const Coordenada& c2){
- //return not (c1 == c2);
-//}
+bool Coordenada::operator != (const Coordenada& c) const{
+ return not (*this == c);
+}
 

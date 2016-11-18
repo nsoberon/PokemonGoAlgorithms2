@@ -77,17 +77,18 @@ class DiccString {
 
                     Iterador();
 
-                    DiccString<T>::Iterador crearIt(DiccString<T>);
-                    bool haySiguiente();
-                    T siguiente();
-                    void avanzar();
+                    bool HaySiguiente();
+                    typename DiccString<T>::Tupla Siguiente();
+                    void Avanzar();
 
                   private:
 
                     typename aed2::Conj<typename DiccString<T>::Tupla>::Iterador it_dicc_;
-
+                    Iterador(DiccString<T>& c);
+                    friend class DiccString<T>;
                 };
 
+                Iterador CrearIt();
 
 
 
@@ -130,11 +131,38 @@ class DiccString {
 
 };
 
+// Funciones del Iterador
+
+template<class T>
+DiccString<T>::Iterador::Iterador(DiccString<T>& c)
+  : it_dicc_( c.claves.CrearIt())
+{}
+
+template <typename T>
+typename DiccString<T>::Iterador DiccString<T>::CrearIt(){
+     return Iterador(*this);
+}
+
+template <typename T>
+bool DiccString<T>::Iterador::HaySiguiente(){
+    return it_dicc_.HaySiguiente();
+}
+
+template <typename T>
+typename DiccString<T>::Tupla DiccString<T>::Iterador::Siguiente(){
+    return it_dicc_.Siguiente();
+}
+
+template <typename T>
+void DiccString<T>::Iterador::Avanzar(){
+    return it_dicc_.Avanzar();;
+}
+
+// Funciones de DiccString
 
 template <typename T>
 DiccString<T>::Iterador::Iterador()
 {}
-
 
 template <typename T>
 DiccString<T>::DiccString()
@@ -146,25 +174,6 @@ DiccString<T>::~DiccString(){
 
 }
 
-template <typename T>
-typename DiccString<T>::Iterador DiccString<T>::Iterador::crearIt(DiccString<T> d){
-     this->it_dicc_ = d.Claves().CrearIt();
-}
-
-template <typename T>
-bool DiccString<T>::Iterador::haySiguiente(){
-    return this->haySiguiente();
-}
-
-template <typename T>
-T DiccString<T>::Iterador::siguiente(){
-    return this->siguiente();
-}
-
-template <typename T>
-void DiccString<T>::Iterador::avanzar(){
-    return this->avanzar();
-}
 
 template <typename T>
 void DiccString<T>::vacio(){
@@ -200,7 +209,6 @@ void DiccString<T>::Definir(const string& clave, const T& significado){
     }
     if(actual->significado){
         delete actual->significado;
-        // CONSULTAR COMO CAMBIO EL SIGNIFICADO CON EL ITERADOR DE CONJUNTO
         actual->posicionClaves.EliminarSiguiente();
     }
     DiccString<T>::Tupla* nuevaTupla = new DiccString<T>::Tupla(clave, significado);

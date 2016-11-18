@@ -189,34 +189,37 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::Iterador::CrearIterador(ColaPrior<
 
 template< typename T>
 void ColaPrior<T>::Iterador::EliminarSiguiente(){
-    Nodo* ultimo = this->cola->ultimoNodo();
     Nodo* elem = this->siguiente;
-    if(ultimo->padre->der == ultimo){
-        ultimo->padre->der = NULL;
+    if(elem == this->cola->cabeza){
+        this->cola->Desencolar();
     }else{
-        ultimo->padre->izq = NULL;
-    }
-    ultimo->izq = elem->izq;
-    ultimo->der = elem->der;
-    ultimo->padre = elem->padre;
-    // VER QUE PASA S EL ELEM ES LA RAIZ NO TENDRIA PADRE
-
-    if(elem->padre->der == elem){
-        elem->padre->der = NULL;
-    }else{
-        elem->padre->izq = NULL;
-    }
-    Nodo* actual = ultimo;
-    ColaPrior<T>* cp = this->cola;
-    while((actual->izq && actual->dato > actual->izq->dato) || actual->der && (actual->dato > actual->der->dato)){
-        if(!actual->der || actual->izq->dato < actual->dato){
-            cp->Intercambiar(actual, actual->izq);
+        Nodo* ultimo = this->cola->ultimoNodo();
+        if(ultimo->padre->der == ultimo){
+            ultimo->padre->der = NULL;
         }else{
-            cp->Intercambiar(actual, actual->der);
+            ultimo->padre->izq = NULL;
         }
+        ultimo->izq = elem->izq;
+        ultimo->der = elem->der;
+        ultimo->padre = elem->padre;
+        // VER QUE PASA S EL ELEM ES LA RAIZ NO TENDRIA PADRE
 
+        if(elem->padre->der == elem){
+            elem->padre->der = NULL;
+        }else{
+            elem->padre->izq = NULL;
+        }
+        Nodo* actual = ultimo;
+        ColaPrior<T>* cp = this->cola;
+        while((actual->izq && actual->dato > actual->izq->dato) || actual->der && (actual->dato > actual->der->dato)){
+            if(!actual->der || actual->izq->dato < actual->dato){
+                cp->Intercambiar(actual, actual->izq);
+            }else{
+                cp->Intercambiar(actual, actual->der);
+            }
+
+        }
     }
-
 };
 
 template< typename T>
