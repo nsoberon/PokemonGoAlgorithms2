@@ -5,6 +5,10 @@ Juego::Juego(){
 }
 
 Juego::~Juego(){
+    this->EliminarJuego();
+}
+
+void Juego::EliminarJuego(){
 
 }
 

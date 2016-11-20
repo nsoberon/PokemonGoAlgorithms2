@@ -97,6 +97,7 @@ class Juego{
         Juego();
         ~Juego();
 
+        void EliminarJuego();
         void crearJuego(Mapa);
         void agregarPokemon(Pokemon, Coordenada);
         aed2::Nat agregarJugador();

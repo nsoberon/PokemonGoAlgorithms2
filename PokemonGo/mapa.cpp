@@ -7,6 +7,10 @@ Mapa::Mapa(){
 }
 
 Mapa::~Mapa(){
+    this->EliminarMapa();
+}
+
+void Mapa::EliminarMapa(){
 
 }
 

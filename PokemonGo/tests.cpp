@@ -1,6 +1,6 @@
 // Compilar usando:
-//	g++ -o tests tests.cpp Driver.cpp <lista de archivos *.cpp propios>
-//	valgrind --leak-check=full ./tests
+//  g++ -o tests tests.cpp Driver.cpp <lista de archivos *.cpp propios>
+//  valgrind --leak-check=full ./tests
 
 #include "Driver.h"
 #include "mini_test.h"
@@ -143,6 +143,6 @@ int main(int argc, char **argv)
   RUN_TEST(test_agregar_pokemones);*/
   RUN_TEST(test_conectarse_desconectarse);
 
-  
+
   return 0;
 }

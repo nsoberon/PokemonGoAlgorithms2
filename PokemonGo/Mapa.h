@@ -27,7 +27,7 @@ public:
   // Constructor y destructor
     Mapa();
     ~Mapa();
-
+    void EliminarMapa();
 
   // Generadores
     void crearMapa();
