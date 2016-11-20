@@ -5,12 +5,14 @@
 
 // Instanciar un mapa y un juego 
 
-Driver::Driver(const Conj< Coordenada > & cs)
+Driver::Driver(const aed2::Conj< Coordenada > & cs)
 {
     Mapa m;
-    Conj<Coordenada>::const_Iterador itCoor = cs.CrearIt();
+    m.crearMapa();
+    aed2::Conj<Coordenada>::const_Iterador itCoor = cs.CrearIt();
     while(itCoor.HaySiguiente()){
         m.agregarCoor(itCoor.Siguiente());
+        itCoor.Avanzar();
     }
     Juego j;
     j.crearJuego(m);
@@ -175,5 +177,5 @@ Nat Driver::cantPokemonsTotales() const{
 
 /* Indica cuantos pokemons de la especie de unPokemon hay en pokemons. */
 Nat Driver::cantMismaEspecie(const Pokemon & p) const{
-    return this->cantMismaEspecie(p);
+    return this->juegoDriver.cantMismaEspecie(p);
 }

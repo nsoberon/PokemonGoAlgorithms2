@@ -76,7 +76,7 @@ class DiccString {
                   public:
 
                     Iterador();
-
+                    ~Iterador();
                     bool HaySiguiente();
                     typename DiccString<T>::Tupla Siguiente();
                     void Avanzar();
@@ -97,7 +97,7 @@ class DiccString {
                   public:
 
                     const_Iterador();
-
+                    ~const_Iterador();
                     bool HaySiguiente();
                     typename DiccString<T>::Tupla Siguiente();
                     void Avanzar();
@@ -211,9 +211,17 @@ DiccString<T>::Iterador::Iterador()
 {}
 
 template <typename T>
+DiccString<T>::Iterador::~Iterador()
+{}
+
+template <typename T>
 DiccString<T>::const_Iterador::const_Iterador(){
 
 }
+
+template <typename T>
+DiccString<T>::const_Iterador::~const_Iterador()
+{}
 
 template <typename T>
 DiccString<T>::DiccString()
@@ -222,7 +230,12 @@ DiccString<T>::DiccString()
 
 template <typename T>
 DiccString<T>::~DiccString(){
-
+/*    DiccString<T>::Iterador itClaves = this->CrearIt();
+    while(itClaves.HaySiguiente()){
+        this->Borrar(itClaves.Siguiente().clave);
+        itClaves.Avanzar();
+    }
+*/
 }
 
 
@@ -428,5 +441,6 @@ typename DiccString<T>::Nodo* DiccString<T>::buscarNodo(string clave){
         }
         return actual;
 }
+
 
 #endif

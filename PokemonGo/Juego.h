@@ -11,10 +11,8 @@ class Juego{
         struct JugadorEsperando{
             Jugador jugador;
             aed2::Nat cantidadPokemonsAtrapados;
-            JugadorEsperando(){
-
-            };
-            void crearJugadorEsperando(Jugador j, aed2::Nat c){
+            JugadorEsperando(){};
+            JugadorEsperando(Jugador j, aed2::Nat c){
                 jugador = j;
                 cantidadPokemonsAtrapados = c;
             }
@@ -33,9 +31,7 @@ class Juego{
             Coordenada posicion;
             ColaPrior<Juego::JugadorEsperando> jugadoresEsperando;
             aed2::Nat cantidadMovimientos;
-            DatosPokemonSalvaje(){
-            };
-            void crearDatosPokeSalv(Pokemon p, Coordenada c, ColaPrior<Juego::JugadorEsperando> cp){
+            DatosPokemonSalvaje(Pokemon p, Coordenada c, ColaPrior<Juego::JugadorEsperando> cp){
                 pokemon = p;
                 posicion = c;
                 jugadoresEsperando = cp;
@@ -53,9 +49,7 @@ class Juego{
             bool banneado;
             ColaPrior<Juego::JugadorEsperando>::Iterador esperandoParaCapturar;
             aed2::Conj<aed2::Nat>::Iterador referenciaConjunto;
-            DatosJugador(){
-            };
-            void crearDatosJugador(aed2::Nat i, aed2::Conj<aed2::Nat>::Iterador refConj){
+            DatosJugador(aed2::Nat i, aed2::Conj<aed2::Nat>::Iterador refConj){
                 id = i;
                 sanciones = 0;
                 Coordenada c;
@@ -63,11 +57,13 @@ class Juego{
                 posicion = c;
                 conectado = false;
                 DiccString<aed2::Nat> pokeCap;
+                pokeCap.vacio();
                 pokemonsCapturados = pokeCap;
                 cantidadPokemonsAtrapados = 0;
                 banneado = false;
-                ColaPrior<Juego::JugadorEsperando>::Iterador colaPoke;
-                esperandoParaCapturar = colaPoke;
+                ColaPrior<Juego::JugadorEsperando> colaPoke;
+                ColaPrior<Juego::JugadorEsperando>::Iterador itColaPoke = colaPoke.CrearIterador(NULL);
+                esperandoParaCapturar = itColaPoke;
                 referenciaConjunto = refConj;
             }
         };
@@ -75,9 +71,7 @@ class Juego{
         struct JugadorPokemonEnMapa{
             Juego::DatosJugador* jugador;
             Juego::DatosPokemonSalvaje* pokemon;
-            JugadorPokemonEnMapa(){
-            };
-            void crearJugadorEnMapa(Juego::DatosJugador* j, Juego::DatosPokemonSalvaje* p){
+            JugadorPokemonEnMapa(Juego::DatosJugador* j, Juego::DatosPokemonSalvaje* p){
                 jugador = j;
                 pokemon = p;
             }
@@ -95,7 +89,7 @@ class Juego{
         aed2::Nat cantidadColumnas;
 
         aed2::Lista<Juego::DatosJugador> jugadoresADistancia(aed2::Nat, Coordenada) const;
-        aed2::Lista<Juego::DatosPokemonSalvaje> pokemonsADistancia(aed2::Nat, Coordenada) const;
+        aed2::Lista<Coordenada> pokemonsADistancia(aed2::Nat, Coordenada) const;
         aed2::Conj<Jugador> expulsadosAux(aed2::Vector<Juego::DatosJugador>);
         aed2::Conj<Jugador> jugadoresAux(aed2::Vector<Juego::DatosJugador>);
 

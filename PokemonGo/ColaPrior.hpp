@@ -3,6 +3,7 @@
 
 #include "aed2/TiposBasicos.h"
 #include "aed2/Lista.h"
+#include "aed2/Conj.h"
 
 template<class T>
 class ColaPrior{
@@ -14,6 +15,7 @@ class ColaPrior{
             Nodo* izq;
             Nodo* der;
             T dato;
+            typename aed2::Conj<T>::Iterador posicionEnConj;
             Nodo(T d){
                 this->der = NULL;
                 this->izq = NULL;
@@ -21,6 +23,15 @@ class ColaPrior{
                 this->dato = d;
             }
         };
+
+        aed2::Conj<T> elementos_;
+        aed2::Nat tam;
+        ColaPrior<T>::Nodo* cabeza;
+
+
+        void Intercambiar(Nodo*, Nodo*);
+        Nodo* ultimoNodo();
+        Nodo* ultimoPadre();
 
     public:
         ColaPrior();
@@ -42,21 +53,9 @@ class ColaPrior{
 
             private:
 
-                /*struct Nodo{
-                    Nodo* padre;
-                    Nodo* izq;
-                    Nodo* der;
-                    T dato;
-                    Nodo(T d){
-                        this->der = NULL;
-                        this->izq = NULL;
-                        this->padre = NULL;
-                        this->dato = d;
-                    }
-                };*/
-
                 ColaPrior<T>::Nodo* siguiente;
                 ColaPrior<T>* cola;
+                typename aed2::Conj<T>::Iterador it_cola_;
                 friend class ColaPrior;
 
         public:
@@ -70,13 +69,27 @@ class ColaPrior{
 
         ColaPrior<T>::Iterador CrearIterador(ColaPrior<T>::Nodo*);
         ColaPrior<T>::Iterador Encolar(T);
-        aed2::Nat tam;
-        ColaPrior<T>::Nodo* cabeza;
 
-        void Intercambiar(Nodo*, Nodo*);
-        Nodo* ultimoNodo();
-        Nodo* ultimoPadre();
+        class const_Iterador
+        {
 
+
+            private:
+
+                typename aed2::Conj<T>::const_Iterador it_cola_;
+                const_Iterador(const ColaPrior<T>& c);
+                friend class ColaPrior<T>;
+
+        public:
+
+                const_Iterador();
+                ~const_Iterador();
+                void Avanzar();
+                bool HaySiguiente();
+                T Siguiente();
+        };
+
+         const_Iterador CrearIt() const;
 
 
 };
@@ -84,12 +97,17 @@ class ColaPrior{
 
 template< typename T>
 ColaPrior<T>::ColaPrior(){
-
+    this->tam = 0;
+    this->cabeza = NULL;
+    aed2::Conj<T> conjElementos;
+    this->elementos_ = conjElementos;
 };
 
 template< typename T>
 ColaPrior<T>::~ColaPrior(){
-
+    while(this->cabeza){
+        this->Desencolar();
+    }
 };
 
 template< typename T>
@@ -106,6 +124,7 @@ bool ColaPrior<T>::EsVacia(){
 template< typename T>
 typename ColaPrior<T>::Iterador ColaPrior<T>::Encolar(T elem){
     Nodo* nuevoNodo = new Nodo(elem);
+    nuevoNodo->posicionEnConj = this->elementos_.AgregarRapido(elem);
     if(this->EsVacia()){
         this->cabeza = nuevoNodo;
     }else{
@@ -121,6 +140,7 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::Encolar(T elem){
         }
     }
     this->tam ++;
+
     ColaPrior<T>::Iterador res = this->CrearIterador(nuevoNodo);
     return res;
 };
@@ -128,6 +148,7 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::Encolar(T elem){
 template< typename T>
 T ColaPrior<T>::Desencolar(){
     T res = this->cabeza->dato;
+    this->cabeza->posicionEnConj.EliminarSiguiente();
     aed2::Nat tam = this->tam;
     if(tam == 1){
         this->cabeza = NULL;
@@ -141,6 +162,7 @@ T ColaPrior<T>::Desencolar(){
         ultimo->der = cabeza->der;
         ultimo->izq = cabeza->izq;
         ultimo->padre = NULL;
+        this->cabeza = ultimo;
         Nodo* actual = ultimo;
         while((actual->izq && actual->dato > actual->izq->dato) || (actual->der && actual->dato > actual->der->dato)){
             if(!actual->der){
@@ -160,6 +182,7 @@ T ColaPrior<T>::Desencolar(){
 
 template< typename T>
 T ColaPrior<T>::Proximo(){
+    assert(this->tam > 0);
     return this->cabeza->dato;
 };
 
@@ -178,6 +201,7 @@ ColaPrior<T>::Iterador::~Iterador(){
 
 }
 
+
 template< typename T>
 typename ColaPrior<T>::Iterador ColaPrior<T>::CrearIterador(ColaPrior<T>::Nodo* n){
     ColaPrior<T>::Iterador res;
@@ -190,6 +214,7 @@ template< typename T>
 void ColaPrior<T>::Iterador::EliminarSiguiente(){
     Nodo* ultimo = this->cola->ultimoNodo();
     Nodo* elem = this->siguiente;
+    elem->posicionEnConj.EliminarSiguiente();
     if(elem == this->cola->cabeza){
         this->cola->Desencolar();
     }else{
@@ -202,8 +227,6 @@ void ColaPrior<T>::Iterador::EliminarSiguiente(){
         ultimo->izq = elem->izq;
         ultimo->der = elem->der;
         ultimo->padre = elem->padre;
-        // VER QUE PASA S EL ELEM ES LA RAIZ NO TENDRIA PADRE
-
         if(elem->padre->der == elem){
             elem->padre->der = NULL;
         }else{
@@ -217,8 +240,13 @@ void ColaPrior<T>::Iterador::EliminarSiguiente(){
             }else{
                 cp->Intercambiar(actual, actual->der);
             }
-
         }
+        this->cola->tam --;
+    }
+    if(this->cola->EsVacia()){
+        this->siguiente = NULL;
+    }else{
+        this->siguiente = this->cola->cabeza;
     }
 };
 
@@ -297,5 +325,42 @@ template< typename T>
 typename ColaPrior<T>::Nodo* ColaPrior<T>::Iterador::Siguiente(){
     return this->siguiente;
 }
+
+// Funciones const_Iterador
+template<class T>
+ColaPrior<T>::const_Iterador::const_Iterador(){
+
+}
+
+template<class T>
+ColaPrior<T>::const_Iterador::~const_Iterador(){
+
+}
+
+template<class T>
+ColaPrior<T>::const_Iterador::const_Iterador(const ColaPrior<T>& c)
+  : it_cola_( c.elementos_.CrearIt())
+{}
+
+template <typename T>
+typename ColaPrior<T>::const_Iterador ColaPrior<T>::CrearIt() const{
+     return const_Iterador(*this);
+}
+
+template <typename T>
+bool ColaPrior<T>::const_Iterador::HaySiguiente(){
+    return it_cola_.HaySiguiente();
+}
+
+template <typename T>
+T ColaPrior<T>::const_Iterador::Siguiente(){
+    return it_cola_.Siguiente();
+}
+
+template <typename T>
+void ColaPrior<T>::const_Iterador::Avanzar(){
+    return it_cola_.Avanzar();;
+}
+
 
 #endif // COLAPRIOR_H
