@@ -2,7 +2,6 @@
 #define JUEGO_H
 
 #include "TiposJuego.h"
-#include "Coordenada.h"
 #include "Mapa.h"
 
 class Juego{

@@ -4,9 +4,9 @@
 #include <string>
 #include <ostream>
 #include <iostream>
-#include <Coordenada.h>
-#include <aed2/Conj.h>
-#include <aed2/Lista.h>
+#include "Coordenada.h"
+#include "aed2/Conj.h"
+#include "aed2/Lista.h"
 
 class Mapa {
 
