@@ -102,8 +102,10 @@ class Driver {
 	/* Devuelve todos los jugadores que esten a distancia menor o igual a 2 de
 	 * la coordenada indicada, que tengan un camino hasta ella.
 	 * Requiere que haya un pokemon a distancia menor o igual a 2 de la Coordenada. */
-	Conj<Jugador> entrenadoresPosibles(const Coordenada & c) const;
-	
+
+    Conj<Jugador> entrenadoresPosibles(const Coordenada & c) const;
+    //aed2::Nat entrenadoresPosibles(const Coordenada & c) const;
+
 	/* Devuelve el indice de rarez del pokemon pasado como parametro.
 	 * Requiere que haya al menos un pokemon de la especie en el juego. */
 	Nat indiceRareza(const Pokemon & p) const;

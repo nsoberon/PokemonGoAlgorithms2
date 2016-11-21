@@ -10,7 +10,7 @@ class Juego{
         struct JugadorEsperando{
             Jugador jugador;
             aed2::Nat cantidadPokemonsAtrapados;
-            JugadorEsperando(){};
+            JugadorEsperando(){}
             JugadorEsperando(Jugador j, aed2::Nat c){
                 jugador = j;
                 cantidadPokemonsAtrapados = c;
@@ -30,11 +30,13 @@ class Juego{
             Coordenada posicion;
             ColaPrior<Juego::JugadorEsperando> jugadoresEsperando;
             aed2::Nat cantidadMovimientos;
-            DatosPokemonSalvaje(Pokemon p, Coordenada c, ColaPrior<Juego::JugadorEsperando> cp){
+            aed2::Conj<Coordenada>::Iterador referenciaPosiciones; // ESTO NO ESTA EN EL DISEÑO
+            DatosPokemonSalvaje(Pokemon p, Coordenada c, ColaPrior<Juego::JugadorEsperando> cp, aed2::Conj<Coordenada>::Iterador itConj){
                 pokemon = p;
                 posicion = c;
                 jugadoresEsperando = cp;
                 cantidadMovimientos = 0;
+                referenciaPosiciones = itConj;
             }
         };
 
@@ -118,6 +120,7 @@ class Juego{
         bool hayPokemonCercano(Coordenada) const;
         Coordenada posPokemonCercano(Coordenada) const;
         aed2::Conj<Jugador> entrenadoresPosibles(Coordenada) const;
+        //aed2::Nat entrenadoresPosibles(Coordenada) const;
         aed2::Nat indiceRareza(Pokemon) const;
         aed2::Nat cantPokemonsTotales() const;
         aed2::Nat cantMismaEspecie(Pokemon) const;

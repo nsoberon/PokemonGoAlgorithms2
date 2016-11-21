@@ -35,6 +35,7 @@ class ColaPrior{
 
     public:
         ColaPrior();
+        ColaPrior(const ColaPrior&);
         ~ColaPrior();
         void Vacia();
         bool EsVacia();
@@ -42,6 +43,7 @@ class ColaPrior{
         T Desencolar();
         aed2::Nat Tamanio();
 
+        ColaPrior<T>& operator = (const ColaPrior& otra);
 
 
         /************************************
@@ -103,11 +105,34 @@ ColaPrior<T>::ColaPrior(){
     this->elementos_ = conjElementos;
 };
 
+template <typename T>
+ColaPrior<T>::ColaPrior(const ColaPrior& otra)
+{
+    this->Vacia();
+    ColaPrior<T>::const_Iterador it = otra.CrearIt();
+    while(it.HaySiguiente()){
+        this->Encolar(it.Siguiente());
+        it.Avanzar();
+    }
+}
+
+template <typename T>
+ColaPrior<T>& ColaPrior<T>::operator = (const ColaPrior& otra)
+{
+    this->Vacia();
+    ColaPrior<T>::const_Iterador it = otra.CrearIt();
+    while(it.HaySiguiente()){
+        this->Encolar(it.Siguiente());
+        it.Avanzar();
+    }
+
+}
+
+
+
 template< typename T>
 ColaPrior<T>::~ColaPrior(){
-    while(this->cabeza){
-        this->Desencolar();
-    }
+
 };
 
 template< typename T>
@@ -204,20 +229,20 @@ ColaPrior<T>::Iterador::~Iterador(){
 
 template< typename T>
 typename ColaPrior<T>::Iterador ColaPrior<T>::CrearIterador(ColaPrior<T>::Nodo* n){
-    ColaPrior<T>::Iterador res;
-    res.siguiente = n;
-    res.cola = this;
-    return res;
+    ColaPrior<T>::Iterador* res = new ColaPrior<T>::Iterador();
+    res->siguiente = n;
+    res->cola = this;
+    return *res;
 }
 
 template< typename T>
 void ColaPrior<T>::Iterador::EliminarSiguiente(){
     Nodo* ultimo = this->cola->ultimoNodo();
     Nodo* elem = this->siguiente;
-    elem->posicionEnConj.EliminarSiguiente();
     if(elem == this->cola->cabeza){
         this->cola->Desencolar();
     }else{
+        elem->posicionEnConj.EliminarSiguiente();
         Nodo* ultimo = this->cola->ultimoNodo();
         if(ultimo->padre->der == ultimo){
             ultimo->padre->der = NULL;
@@ -252,7 +277,7 @@ void ColaPrior<T>::Iterador::EliminarSiguiente(){
 
 template< typename T>
 bool ColaPrior<T>::Iterador::HaySiguiente(){
-    return this->siguiente;
+    return this->siguiente != NULL;
 }
 
 

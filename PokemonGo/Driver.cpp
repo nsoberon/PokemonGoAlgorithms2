@@ -160,9 +160,14 @@ Coordenada Driver::posPokemonCercano(const Coordenada & c) const{
 /* Devuelve todos los jugadores que esten a distancia menor o igual a 2 de
  * la coordenada indicada, que tengan un camino hasta ella.
  * Requiere que haya un pokemon a distancia menor o igual a 2 de la Coordenada. */
+
 Conj<Jugador> Driver::entrenadoresPosibles(const Coordenada & c) const{
     return this->juegoDriver.entrenadoresPosibles(c);
 }
+
+/*aed2::Nat Driver::entrenadoresPosibles(const Coordenada &c) const{
+    return this->juegoDriver.entrenadoresPosibles(c);
+}*/
 
 /* Devuelve el indice de rarez del pokemon pasado como parametro.
  * Requiere que haya al menos un pokemon de la especie en el juego. */
