@@ -16,5 +16,5 @@ all: $(TARGET)
 clean:
 	rm -f $(OBJS) $(TARGET)
 
-valgrind: all
-valgrind --leak-check=full ./$(TARGET)
+valgrind:
+	valgrind --leak-check=full ./$(TARGET)

@@ -64,7 +64,6 @@ class ColaPrior{
         public:
 
                 Iterador();
-                ~Iterador();
                 void EliminarSiguiente();
                 bool HaySiguiente();
                 ColaPrior<T>::Nodo* Siguiente();
@@ -86,7 +85,6 @@ class ColaPrior{
         public:
 
                 const_Iterador();
-                ~const_Iterador();
                 void Avanzar();
                 bool HaySiguiente();
                 T Siguiente();
@@ -173,15 +171,14 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::Encolar(T elem){
     }
     this->tam ++;
 
-    ColaPrior<T>::Iterador res = this->CrearIterador(nuevoNodo);
-    return res;
+    return this->CrearIterador(nuevoNodo);;
 };
 
 template< typename T>
 T ColaPrior<T>::Desencolar(){
     T res = this->cabeza->dato;
+    //this->cabeza->posicionEnConj.EliminarSiguiente();
     delete this->cabeza;
-    this->cabeza->posicionEnConj.EliminarSiguiente();
     aed2::Nat tam = this->tam;
     if(tam == 1){
         this->cabeza = NULL;
@@ -225,22 +222,15 @@ aed2::Nat ColaPrior<T>::Tamanio(){
 };
 
 template< typename T>
-ColaPrior<T>::Iterador::Iterador(){
-
-}
-
-template< typename T>
-ColaPrior<T>::Iterador::~Iterador(){
-
-}
-
+ColaPrior<T>::Iterador::Iterador(){}
 
 template< typename T>
 typename ColaPrior<T>::Iterador ColaPrior<T>::CrearIterador(ColaPrior<T>::Nodo* n){
-    ColaPrior<T>::Iterador* res = new ColaPrior<T>::Iterador();
-    res->siguiente = n;
-    res->cola = this;
-    return *res;
+    //ColaPrior<T>::Iterador* res = new ColaPrior<T>::Iterador();
+    ColaPrior<T>::Iterador res;
+    res.siguiente = n;
+    res.cola = this;
+    return res;
 }
 
 template< typename T>
@@ -317,7 +307,7 @@ typename ColaPrior<T>::Nodo* ColaPrior<T>::ultimoNodo(){
 template< typename T>
 typename ColaPrior<T>::Nodo* ColaPrior<T>::ultimoPadre(){
     Nodo* ultimo = this->ultimoNodo();
-    if(ultimo = this->cabeza){
+    if(ultimo == this->cabeza){
         return ultimo;
     }else{
         Nodo* actual = ultimo;
@@ -362,11 +352,6 @@ typename ColaPrior<T>::Nodo* ColaPrior<T>::Iterador::Siguiente(){
 // Funciones const_Iterador
 template<class T>
 ColaPrior<T>::const_Iterador::const_Iterador(){
-
-}
-
-template<class T>
-ColaPrior<T>::const_Iterador::~const_Iterador(){
 
 }
 
