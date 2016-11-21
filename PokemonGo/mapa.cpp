@@ -95,13 +95,11 @@ void Mapa::agregarCoor(Coordenada c){
         this->matrizCaminos[c.longitud()][c.latitud()] = this->marca;
         this->marca ++;
     }else if(vecinosCoor.Tamanho() == 1){
-        //aed2::Nat nico1 = vecinosCoor[0];
         this->matrizCaminos[c.longitud()][c.latitud()] = vecinosCoor[0];
     }else{
         this->marcarVecinos(vecinosCoor[0], vecinosCoor);
         this->matrizCaminos[c.longitud()][c.latitud()] = vecinosCoor[0];
     }
-    aed2::Nat nico = this->matrizCaminos[c.longitud()][c.latitud()];
     this->coordenadasM.Agregar(c);
 }
 

@@ -7,6 +7,34 @@
 
 using namespace aed2;
 
+// TESTS DESTRUCTORES
+
+void test_coordenada_destructor(){
+    Coordenada c;
+    c.crearCoor(1,1);
+}
+
+void test_mapa_destructor(){
+    Mapa m;
+    m.crearMapa();
+}
+
+void test_cola_destructor(){
+    ColaPrior<int> nico;
+    nico.Vacia();
+    nico.Encolar(1);
+    nico.Encolar(2);
+}
+
+void test_dicc_destructor(){
+    DiccString<int> nico;
+    nico.vacio();
+    nico.Definir("nico",1);
+    nico.Claves();
+}
+
+// TESTS JUEGO
+
 void test_constructor_con_mapa() {
   aed2::Conj<Coordenada> cc;
   Coordenada a;
@@ -187,8 +215,8 @@ void test_moverse(){
     driverTest.agregarJugador();
     driverTest.agregarJugador();
     // Conecto a los jugadores y Agrego Pokemons
-    driverTest.agregarPokemon(pikachu, a);
     driverTest.conectarse(0,b);
+    driverTest.agregarPokemon(pikachu, a);
     aed2::Nat nico = driverTest.cantMovimientosParaCaptura(a);
     ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
     driverTest.entrenadoresPosibles(a);
@@ -201,18 +229,17 @@ void test_moverse(){
     driverTest.agregarPokemon(bulbasaur, g);
     driverTest.conectarse(4,i);
     // Chequeo que para cada pokemon tengo un solo entrenador que puede atraparlo
-    /*ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
+    ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
     ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
     ASSERT(driverTest.entrenadoresPosibles(b).Cardinal() == 1);
     ASSERT(driverTest.entrenadoresPosibles(c).Cardinal() == 1);
-    ASSERT(driverTest.entrenadoresPosibles(d).Cardinal() == 1);*/
+    ASSERT(driverTest.entrenadoresPosibles(d).Cardinal() == 1);
     // Chequeo que ninguno de los jugadores tiene pokemons atrapados
     ASSERT(driverTest.pokemons(0).CantClaves() == 0);
     ASSERT(driverTest.pokemons(1).CantClaves() == 0);
     ASSERT(driverTest.pokemons(2).CantClaves() == 0);
     ASSERT(driverTest.pokemons(3).CantClaves() == 0);
     ASSERT(driverTest.pokemons(4).CantClaves() == 0);
-    //ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
     // Genero 10 movimientos externos para que todos atrapen el pokemon que tienen cercano
     driverTest.moverse(4,j);
     driverTest.moverse(4,i);
@@ -228,7 +255,7 @@ void test_moverse(){
     ASSERT(driverTest.pokemons(0).CantClaves() == 1);
     ASSERT(driverTest.pokemons(1).CantClaves() == 1);
     ASSERT(driverTest.pokemons(2).CantClaves() == 1);
-    ASSERT(driverTest.pokemons(3).CantClaves() == 1);
+    ASSERT(driverTest.pokemons(5).CantClaves() == 1);
     ASSERT(driverTest.pokemons(4).CantClaves() == 0);
 }
 
@@ -287,7 +314,7 @@ void test_sancionar_bannear(){
     cc.Agregar(i);
     cc.Agregar(j);
     Driver driverTest(cc);
-    // Agrego 5 jugadores
+    // Agrego 1 jugador
     driverTest.agregarJugador();
     // Conecto los jugadores
     driverTest.conectarse(0,a);
@@ -394,23 +421,169 @@ void test_jugador_pokemon_cercano(){
     cc.Agregar(b);
     cc.Agregar(c);
     Driver driverTest(cc);
+    driverTest.agregarPokemon(pikachu, a);
+    driverTest.agregarJugador();
+    driverTest.conectarse(0, b);
+    ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
+    driverTest.agregarPokemon(charmander, c);
+    ASSERT(driverTest.entrenadoresPosibles(c).Cardinal() == 0);
+    driverTest.moverse(0,c);
+    ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 0);
+    ASSERT(driverTest.entrenadoresPosibles(c).Cardinal() == 1);
+}
+
+void test_salir_zona_pokemon(){
+    aed2::Conj<Coordenada> cc;
+    Pokemon pikachu = "pikachu";
+    Coordenada a;
+    Coordenada b;
+    Coordenada c;
+    a.crearCoor(0,0);
+    b.crearCoor(0,1);
+    c.crearCoor(0,8);
+    cc.Agregar(a);
+    cc.Agregar(b);
+    cc.Agregar(c);
+    Driver driverTest(cc);
+    driverTest.agregarJugador();
+    driverTest.conectarse(0, b);
+    driverTest.agregarPokemon(pikachu, a);
+    ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
+    driverTest.moverse(0,c);
+    ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 0);
+}
+
+void test_atrapa_el_de_menos(){
+    aed2::Conj<Coordenada> cc;
+    Pokemon pikachu = "pikachu";
+    Pokemon charmander = "charmander";
+    Pokemon squirtle = "squirtle";
+    Pokemon bulbasaur = "bulbasaur";
+    Coordenada a;
+    Coordenada b;
+    Coordenada c;
+    Coordenada d;
+    Coordenada e;
+    Coordenada f;
+    Coordenada g;
+    Coordenada h;
+    Coordenada i;
+    Coordenada j;
+    a.crearCoor(0,0);
+    b.crearCoor(0,1);
+    c.crearCoor(0,8);
+    d.crearCoor(0,9);
+    e.crearCoor(0,17);
+    f.crearCoor(0,18);
+    g.crearCoor(0,19);
+    h.crearCoor(15,1);
+    i.crearCoor(15,2);
+    cc.Agregar(a);
+    cc.Agregar(b);
+    cc.Agregar(c);
+    cc.Agregar(d);
+    cc.Agregar(e);
+    cc.Agregar(f);
+    cc.Agregar(g);
+    cc.Agregar(h);
+    cc.Agregar(i);
+    Driver driverTest(cc);
+    driverTest.agregarJugador();
+    driverTest.agregarJugador();
     driverTest.agregarJugador();
     driverTest.agregarPokemon(pikachu, a);
-    driverTest.conectarse(0, b);
     driverTest.agregarPokemon(charmander, c);
-    //driverTest.moverse(0,c);
+    // 0 y 1 van a atrapar pokemons, 2 va a ser el que genere los movimientos para que puedan atraparlos
+    driverTest.conectarse(0, b);
+    driverTest.conectarse(1, d);
+    driverTest.conectarse(2, h);
+    // TENGO UN ENTRENADOR EN LA ZONA DE CADA POKEMON
+    ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
+    ASSERT(driverTest.entrenadoresPosibles(c).Cardinal() == 1);
+    ASSERT(driverTest.pokemons(0).CantClaves() == 0);
+    ASSERT(driverTest.pokemons(1).CantClaves() == 0);
+    ASSERT(driverTest.pokemons(2).CantClaves() == 0);
+    // GENERO 10 MOVIMIENTOS EXTERIORES PARA QUE LOS DOS ATRAPEN
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    // CHEQUEO QUE EFECTIVAMENTE LOS DOS ATRAPAN
+    ASSERT(driverTest.pokemons(0).CantClaves() == 1);
+    ASSERT(driverTest.pokemons(1).CantClaves() == 1);
+    ASSERT(driverTest.pokemons(2).CantClaves() == 0);
+    driverTest.agregarPokemon(squirtle, a);
+    ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
+    // AGREGO UN POKEMON PARA QUE PUEDA SER ATRAPADO POR EL JUGADOR 0
+    // GENERO LOS MOVIMIENTOS PARA LA CAPTURA
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    ASSERT(driverTest.pokemons(0).CantClaves() == 2);
+    ASSERT(driverTest.pokemons(1).CantClaves() == 1);
+    ASSERT(driverTest.pokemons(2).CantClaves() == 0);
+    // PONGO A LOS DOS JUGADORES CERCA DE UN POKEMON PARA QUE LOS DOS ESTEN EN LA ZONA DE CAPTURA
+    driverTest.moverse(0, e);
+    driverTest.moverse(1, g);
+    driverTest.agregarPokemon(bulbasaur, f);
+    // TENGO DOS ENTRENADORES EN LA ZONA DEL POKEMON
+    ASSERT(driverTest.entrenadoresPosibles(f).Cardinal() == 2);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    driverTest.moverse(2, i);
+    driverTest.moverse(2, h);
+    // CHEQUEO QUE EFECTIVAMENTE ATRAPA EL QUE TIENE MENOS POKEMONS
+    ASSERT(driverTest.pokemons(0).CantClaves() == 2);
+    ASSERT(driverTest.pokemons(1).CantClaves() == 2);
+    ASSERT(driverTest.pokemons(2).CantClaves() == 0);
 }
+
 
 int main(int argc, char **argv)
 {
-    /*RUN_TEST(test_constructor_con_mapa);
+    // TESTS DESTRUCTORES
+    /*RUN_TEST(test_coordenada_destructor);
+    RUN_TEST(test_mapa_destructor);
+    RUN_TEST(test_cola_destructor);
+    RUN_TEST(test_dicc_destructor);
+    */
+    // TESTS JUEGO
+    RUN_TEST(test_constructor_con_mapa);
     RUN_TEST(test_agregar_jugadores);
     RUN_TEST(test_agregar_pokemones);
-    RUN_TEST(test_conectarse_desconectarse);
     RUN_TEST(test_cola_copia);
     RUN_TEST(test_sancionar_bannear);
     RUN_TEST(test_bannear_eliminar_pokemons);
-    RUN_TEST(test_jugador_pokemon_cercano);*/
+    RUN_TEST(test_conectarse_desconectarse);
     RUN_TEST(test_moverse);
-  return 0;
+    RUN_TEST(test_salir_zona_pokemon);
+    RUN_TEST(test_jugador_pokemon_cercano);
+    RUN_TEST(test_atrapa_el_de_menos);
+
+
+    // TESTS PARA HACER
+    // POKEMONS POSICIONES; QUE CUANDO AGERGO CHEQUEO QUE EL POKEMON DE ESA POSICION SEA ESE
+    // JUGADORES POSICION ACTUAL, CHEQUEO LA POSCIION ACTUAL DEL JUGADOR LUEGO DE CONECTARSE Y MOVERSE
+    // CHEQUEAR FUNCIONES CHICAS
+    // CHEQUEAR CONECTAR DESCONECTAR TENIENDO POKEMONS CERCA
+    return 0;
 }

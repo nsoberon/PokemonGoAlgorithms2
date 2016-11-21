@@ -114,8 +114,7 @@ class Driver {
 	Nat cantPokemonsTotales() const;
 
 	/* Indica cuantos pokemons de la especie de unPokemon hay en pokemons. */
-	Nat cantMismaEspecie(const Pokemon & p) const;
-
+	Nat cantMismaEspecie(const Pokemon & p) const;    
 
 	private:
 

@@ -37,6 +37,7 @@ class ColaPrior{
         ColaPrior();
         ColaPrior(const ColaPrior&);
         ~ColaPrior();
+        void Destruir();
         void Vacia();
         bool EsVacia();
         T Proximo();
@@ -99,10 +100,7 @@ class ColaPrior{
 
 template< typename T>
 ColaPrior<T>::ColaPrior(){
-    this->tam = 0;
-    this->cabeza = NULL;
-    aed2::Conj<T> conjElementos;
-    this->elementos_ = conjElementos;
+
 };
 
 template <typename T>
@@ -132,13 +130,20 @@ ColaPrior<T>& ColaPrior<T>::operator = (const ColaPrior& otra)
 
 template< typename T>
 ColaPrior<T>::~ColaPrior(){
-
+    this->Destruir();
 };
 
 template< typename T>
+void ColaPrior<T>::Destruir(){
+
+}
+
+template< typename T>
 void ColaPrior<T>::Vacia(){
-    this->cabeza = NULL;
     this->tam = 0;
+    this->cabeza = NULL;
+    aed2::Conj<T> conjElementos;
+    this->elementos_ = conjElementos;
 };
 
 template< typename T>
@@ -173,6 +178,7 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::Encolar(T elem){
 template< typename T>
 T ColaPrior<T>::Desencolar(){
     T res = this->cabeza->dato;
+    delete this->cabeza;
     this->cabeza->posicionEnConj.EliminarSiguiente();
     aed2::Nat tam = this->tam;
     if(tam == 1){

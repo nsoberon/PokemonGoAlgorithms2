@@ -230,12 +230,7 @@ DiccString<T>::DiccString()
 
 template <typename T>
 DiccString<T>::~DiccString(){
-/*    DiccString<T>::Iterador itClaves = this->CrearIt();
-    while(itClaves.HaySiguiente()){
-        this->Borrar(itClaves.Siguiente().clave);
-        itClaves.Avanzar();
-    }
-*/
+
 }
 
 

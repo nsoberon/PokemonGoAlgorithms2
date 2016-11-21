@@ -120,7 +120,6 @@ class Juego{
         bool hayPokemonCercano(Coordenada) const;
         Coordenada posPokemonCercano(Coordenada) const;
         aed2::Conj<Jugador> entrenadoresPosibles(Coordenada) const;
-        //aed2::Nat entrenadoresPosibles(Coordenada) const;
         aed2::Nat indiceRareza(Pokemon) const;
         aed2::Nat cantPokemonsTotales() const;
         aed2::Nat cantMismaEspecie(Pokemon) const;
