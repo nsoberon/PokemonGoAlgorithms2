@@ -17,20 +17,30 @@ void test_coordenada_destructor(){
 void test_mapa_destructor(){
     Mapa m;
     m.crearMapa();
+    Coordenada c;
+    Coordenada d;
+    Coordenada e;
+    e.crearCoor(2,4);
+    d.crearCoor(2,5);
+    c.crearCoor(1,1);
+    m.agregarCoor(c);
+    m.agregarCoor(d);
+    m.agregarCoor(e);
+    ASSERT(m.hayCamino(e,d));
+
 }
 
 void test_cola_destructor(){
     ColaPrior<int> nico;
     nico.Vacia();
     nico.Encolar(1);
-    nico.Encolar(2);
 }
 
 void test_dicc_destructor(){
     DiccString<int> nico;
     nico.vacio();
     nico.Definir("nico",1);
-    nico.Claves();
+    nico.Borrar("nico");
 }
 
 // TESTS JUEGO
@@ -557,17 +567,91 @@ void test_atrapa_el_de_menos(){
     ASSERT(driverTest.pokemons(2).CantClaves() == 0);
 }
 
+void test_sanciones(){
+    aed2::Conj<Coordenada> cc;
+    Coordenada a;
+    Coordenada b;
+    Coordenada c;
+    Coordenada d;
+    Coordenada e;
+    Coordenada f;
+    Coordenada g;
+    Coordenada h;
+    Coordenada i;
+    Coordenada j;
+    a.crearCoor(0,0);
+    b.crearCoor(0,1);
+    c.crearCoor(0,8);
+    d.crearCoor(0,9);
+    e.crearCoor(0,17);
+    f.crearCoor(0,18);
+    g.crearCoor(0,19);
+    h.crearCoor(15,1);
+    i.crearCoor(15,2);
+    cc.Agregar(a);
+    cc.Agregar(b);
+    cc.Agregar(c);
+    cc.Agregar(d);
+    cc.Agregar(e);
+    cc.Agregar(f);
+    cc.Agregar(g);
+    cc.Agregar(h);
+    cc.Agregar(i);
+    Driver driverTest(cc);
+    driverTest.agregarJugador();
+    driverTest.conectarse(0, a);
+    ASSERT(driverTest.sanciones(0) == 0);
+    // Movimiento que sanciona
+    driverTest.moverse(0, f);
+    ASSERT(driverTest.sanciones(0) == 1);
+    // Movimiento que no sanciona
+    driverTest.moverse(0, g);
+    ASSERT(driverTest.sanciones(0) == 1);
+    // Movimiento que sanciona
+    driverTest.moverse(0, a);
+    ASSERT(driverTest.sanciones(0) == 2);
+    // Movimiento que sanciona
+    driverTest.moverse(0, f);
+    ASSERT(driverTest.sanciones(0) == 3);
+}
+
+void test_posicion(){
+    aed2::Conj<Coordenada> cc;
+    Coordenada a;
+    Coordenada b;
+    Coordenada c;
+    Coordenada d;
+    a.crearCoor(0,0);
+    b.crearCoor(0,1);
+    c.crearCoor(0,8);
+    d.crearCoor(0,9);
+    cc.Agregar(a);
+    cc.Agregar(b);
+    cc.Agregar(c);
+    cc.Agregar(d);
+    Driver driverTest(cc);
+    driverTest.agregarJugador();
+    driverTest.conectarse(0,a);
+    ASSERT(driverTest.posicion(0) == a);
+    driverTest.moverse(0, c);
+    ASSERT(driverTest.posicion(0) == c);
+    driverTest.desconectarse(0);
+    driverTest.conectarse(0,b);
+    ASSERT(driverTest.posicion(0) == b);
+}
+
 
 int main(int argc, char **argv)
 {
     // TESTS DESTRUCTORES
-    /*RUN_TEST(test_coordenada_destructor);
-    RUN_TEST(test_mapa_destructor);
-    RUN_TEST(test_cola_destructor);
+    //RUN_TEST(test_coordenada_destructor);
+    //RUN_TEST(test_mapa_destructor);
+    //RUN_TEST(test_juego_destructor);
+    //RUN_TEST(test_cola_destructor);
     RUN_TEST(test_dicc_destructor);
-    */
+
     // TESTS JUEGO
-    RUN_TEST(test_constructor_con_mapa);
+    /*RUN_TEST(test_constructor_con_mapa);
     RUN_TEST(test_agregar_jugadores);
     RUN_TEST(test_agregar_pokemones);
     RUN_TEST(test_cola_copia);
@@ -578,6 +662,10 @@ int main(int argc, char **argv)
     RUN_TEST(test_salir_zona_pokemon);
     RUN_TEST(test_jugador_pokemon_cercano);
     RUN_TEST(test_atrapa_el_de_menos);
+    RUN_TEST(test_sanciones);
+    RUN_TEST(test_posicion);
+*/
+
 
 
     // TESTS PARA HACER

@@ -16,8 +16,7 @@ void Juego::crearJuego(Mapa m){
     this->mapaJuego = m;
     this->cantidadFilas = m.maximaLatitud() + 1;
     this->cantidadColumnas = m.maximaLongitud() + 1;
-    aed2::Arreglo<Juego::JugadorPokemonEnMapa>* mapaJugadoresPokemons = new aed2::Arreglo<Juego::JugadorPokemonEnMapa>((this->cantidadFilas + 1) * (this->cantidadColumnas + 1));
-    this->jugadoresPokemonsMapa = *mapaJugadoresPokemons;
+    this->jugadoresPokemonsMapa = aed2::Arreglo<Juego::JugadorPokemonEnMapa>((this->cantidadFilas + 1) * (this->cantidadColumnas + 1));
     aed2::Vector<Juego::DatosJugador> jugVec;
     this->jugadoresVector = jugVec;
     aed2::Conj<aed2::Nat> jugConj;
@@ -40,8 +39,8 @@ void Juego::agregarPokemon(Pokemon p, Coordenada c){
     this->pokemonsCantidades.Definir(p, valor + 1);
     ColaPrior<Juego::JugadorEsperando> heapEsperandoCaptura;
     heapEsperandoCaptura.Vacia();
-    Juego::DatosPokemonSalvaje* datosPoke = new Juego::DatosPokemonSalvaje(p, c, heapEsperandoCaptura, this->posicionesPokemons.AgregarRapido(c));
-    aed2::Lista<Juego::DatosPokemonSalvaje>::Iterador datosNuevos = this->pokemonsSalvajes.AgregarAtras(*datosPoke);
+    Juego::DatosPokemonSalvaje datosPoke = Juego::DatosPokemonSalvaje(p, c, heapEsperandoCaptura, this->posicionesPokemons.AgregarRapido(c));
+    aed2::Lista<Juego::DatosPokemonSalvaje>::Iterador datosNuevos = this->pokemonsSalvajes.AgregarAtras(datosPoke);
     aed2::Nat lat = c.latitud();
     aed2::Nat lon = c.longitud();
     aed2::Nat e = lat * this->cantidadColumnas + lon;
@@ -50,14 +49,14 @@ void Juego::agregarPokemon(Pokemon p, Coordenada c){
         //this->jugadoresPokemonsMapa[e].pokemon = datosPoke;
     }else{
         //Juego::JugadorPokemonEnMapa* datos = new Juego::JugadorPokemonEnMapa(NULL, datosPoke);
-        Juego::JugadorPokemonEnMapa* datos = new Juego::JugadorPokemonEnMapa(NULL, &datosNuevos.Siguiente());
-        this->jugadoresPokemonsMapa.Definir(e, *datos);
+        Juego::JugadorPokemonEnMapa datos = Juego::JugadorPokemonEnMapa(NULL, &datosNuevos.Siguiente());
+        this->jugadoresPokemonsMapa.Definir(e, datos);
     }
     aed2::Lista<Juego::DatosJugador> jugadoresCercanos = this->jugadoresADistancia(2,c);
     aed2::Lista<Juego::DatosJugador>::Iterador itCercanos = jugadoresCercanos.CrearIt();
     while(itCercanos.HaySiguiente()){
-        Juego::JugadorEsperando* jugEsp = new Juego::JugadorEsperando(itCercanos.Siguiente().id, itCercanos.Siguiente().cantidadPokemonsAtrapados);
-        this->jugadoresVector[itCercanos.Siguiente().id].esperandoParaCapturar = this->jugadoresPokemonsMapa[e].pokemon->jugadoresEsperando.Encolar(*jugEsp);
+        Juego::JugadorEsperando jugEsp = Juego::JugadorEsperando(itCercanos.Siguiente().id, itCercanos.Siguiente().cantidadPokemonsAtrapados);
+        this->jugadoresVector[itCercanos.Siguiente().id].esperandoParaCapturar = this->jugadoresPokemonsMapa[e].pokemon->jugadoresEsperando.Encolar(jugEsp);
         itCercanos.Avanzar();
     }
     this->cantidadTotalPokemons ++;
@@ -66,8 +65,8 @@ void Juego::agregarPokemon(Pokemon p, Coordenada c){
 aed2::Nat Juego::agregarJugador(){
     aed2::Nat id = this->jugadoresVector.Longitud();
     aed2::Conj<aed2::Nat>::Iterador itReferencia = this->jugadoresConjunto.AgregarRapido(id);
-    Juego::DatosJugador* datosJ = new Juego::DatosJugador(id, itReferencia);
-    this->jugadoresVector.AgregarAtras(*datosJ);
+    Juego::DatosJugador datosJ = Juego::DatosJugador(id, itReferencia);
+    this->jugadoresVector.AgregarAtras(datosJ);
     return id;
 }
 
@@ -81,8 +80,8 @@ void Juego::conectarse(Jugador j, Coordenada c){
     if(this->jugadoresPokemonsMapa.Definido(e)){
         this->jugadoresPokemonsMapa[e].jugador = &this->jugadoresVector[j];
     }else{
-        Juego::JugadorPokemonEnMapa* nuevoJug = new Juego::JugadorPokemonEnMapa(&this->jugadoresVector[j], NULL);
-        this->jugadoresPokemonsMapa.Definir(e, *nuevoJug);
+        Juego::JugadorPokemonEnMapa nuevoJug = Juego::JugadorPokemonEnMapa(&this->jugadoresVector[j], NULL);
+        this->jugadoresPokemonsMapa.Definir(e, nuevoJug);
     }
     if(this->hayPokemonCercano(c)){
         Coordenada posPoke = this->pokemonsADistancia(2,c).Primero();
@@ -92,9 +91,8 @@ void Juego::conectarse(Jugador j, Coordenada c){
         // ESTA PARTE ES LA QUE NO ESTA ANDANDO ESTOY ASIGNANDO ENTRANDO A LA POSICION EN EL MAPA
         // LO TENGO QUE HACER DE OTRA FORMA? Si miro la variable NICO ESTA ASIGNANDO TODO, PERO ES COMO QUE DESPUES SE VA :(
         this->jugadoresPokemonsMapa[eP].pokemon->cantidadMovimientos = 0;
-        Juego::DatosPokemonSalvaje* nico = this->jugadoresPokemonsMapa[eP].pokemon;
-        Juego::JugadorEsperando* jugN = new Juego::JugadorEsperando(this->jugadoresVector[j].id, this->jugadoresVector[j].cantidadPokemonsAtrapados);
-        this->jugadoresVector[j].esperandoParaCapturar = this->jugadoresPokemonsMapa[eP].pokemon->jugadoresEsperando.Encolar(*jugN);
+        Juego::JugadorEsperando jugN = Juego::JugadorEsperando(this->jugadoresVector[j].id, this->jugadoresVector[j].cantidadPokemonsAtrapados);
+        this->jugadoresVector[j].esperandoParaCapturar = this->jugadoresPokemonsMapa[eP].pokemon->jugadoresEsperando.Encolar(jugN);
     }
 }
 
@@ -109,8 +107,8 @@ void Juego::desconectarse(Jugador j){
         if(this->jugadoresPokemonsMapa[e].jugador->esperandoParaCapturar.HaySiguiente()){
             this->jugadoresPokemonsMapa[e].jugador->esperandoParaCapturar.EliminarSiguiente();
         }
-        Juego::JugadorPokemonEnMapa* nuevoJug = new Juego::JugadorPokemonEnMapa(NULL, this->jugadoresPokemonsMapa[e].pokemon);
-        this->jugadoresPokemonsMapa.Definir(e, *nuevoJug);
+        Juego::JugadorPokemonEnMapa nuevoJug = Juego::JugadorPokemonEnMapa(NULL, this->jugadoresPokemonsMapa[e].pokemon);
+        this->jugadoresPokemonsMapa.Definir(e, nuevoJug);
     }
 }
 
@@ -144,8 +142,8 @@ void Juego::moverse(Jugador j, Coordenada c){
             this->jugadoresPokemonsMapa[eN].jugador = this->jugadoresPokemonsMapa[e].jugador;
             this->jugadoresPokemonsMapa[e].jugador = NULL;
         }else{
-            Juego::JugadorPokemonEnMapa* nuevoJug = new Juego::JugadorPokemonEnMapa(this->jugadoresPokemonsMapa[e].jugador, NULL);
-            this->jugadoresPokemonsMapa.Definir(eN, *nuevoJug);
+            Juego::JugadorPokemonEnMapa nuevoJug = Juego::JugadorPokemonEnMapa(this->jugadoresPokemonsMapa[e].jugador, NULL);
+            this->jugadoresPokemonsMapa.Definir(eN, nuevoJug);
             this->jugadoresPokemonsMapa[e].jugador = NULL;
         }
         if(this->hayPokemonCercano(posicionActual)){
@@ -158,8 +156,8 @@ void Juego::moverse(Jugador j, Coordenada c){
                     aed2::Nat e = lat * this->cantidadColumnas + lon;
                     this->jugadoresPokemonsMapa[e].pokemon->cantidadMovimientos = 0;
                     this->jugadoresVector[j].esperandoParaCapturar.EliminarSiguiente();
-                    Juego::JugadorEsperando* jugNuevo = new Juego::JugadorEsperando(j, this->jugadoresVector[j].cantidadPokemonsAtrapados);
-                    this->jugadoresVector[j].esperandoParaCapturar = this->jugadoresPokemonsMapa[e].pokemon->jugadoresEsperando.Encolar(*jugNuevo);
+                    Juego::JugadorEsperando jugNuevo = Juego::JugadorEsperando(j, this->jugadoresVector[j].cantidadPokemonsAtrapados);
+                    this->jugadoresVector[j].esperandoParaCapturar = this->jugadoresPokemonsMapa[e].pokemon->jugadoresEsperando.Encolar(jugNuevo);
                     aed2::Lista<Juego::DatosPokemonSalvaje>::Iterador itPosPoke = this->pokemonsSalvajes.CrearIt();
                     while(itPosPoke.HaySiguiente()){
                         if(itPosPoke.Siguiente().posicion != pokemonCercanoPosicionNueva){
@@ -182,8 +180,8 @@ void Juego::moverse(Jugador j, Coordenada c){
             aed2::Nat lon = pokemonCercanoPosicionNueva.longitud();
             aed2::Nat e = lat * this->cantidadColumnas + lon;
             this->jugadoresPokemonsMapa[e].pokemon->cantidadMovimientos = 0;
-            Juego::JugadorEsperando* jugNuevo = new Juego::JugadorEsperando(j, this->jugadoresVector[j].cantidadPokemonsAtrapados);
-            this->jugadoresVector[j].esperandoParaCapturar = this->jugadoresPokemonsMapa[e].pokemon->jugadoresEsperando.Encolar(*jugNuevo);
+            Juego::JugadorEsperando jugNuevo = Juego::JugadorEsperando(j, this->jugadoresVector[j].cantidadPokemonsAtrapados);
+            this->jugadoresVector[j].esperandoParaCapturar = this->jugadoresPokemonsMapa[e].pokemon->jugadoresEsperando.Encolar(jugNuevo);
             aed2::Lista<Juego::DatosPokemonSalvaje>::Iterador itPosPoke = this->pokemonsSalvajes.CrearIt();
             while(itPosPoke.HaySiguiente()){
                 if(itPosPoke.Siguiente().posicion != pokemonCercanoPosicionNueva){

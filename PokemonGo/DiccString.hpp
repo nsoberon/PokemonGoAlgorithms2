@@ -24,6 +24,7 @@ class DiccString {
                 **/
                 ~DiccString();
 
+                void vaciar();
 
                 void vacio();
 
@@ -230,15 +231,23 @@ DiccString<T>::DiccString()
 
 template <typename T>
 DiccString<T>::~DiccString(){
-
+    this->vaciar();
 }
 
+template <typename T>
+void DiccString<T>::vaciar(){
+    /*typename aed2::Conj<Tupla>::const_Iterador itConj = this->claves.CrearIt();
+    while(this->claves.Cardinal() > 0){
+        this->Borrar(itConj.Siguiente().clave);
+        itConj.Avanzar();
+    }*/
+}
 
 template <typename T>
 void DiccString<T>::vacio(){
-    aed2::Conj<Tupla>* nuevaTupla = new aed2::Conj<Tupla>;
+    aed2::Conj<Tupla> nuevaTupla = aed2::Conj<Tupla>();
     this->raiz = NULL;
-    this->claves = *nuevaTupla;
+    this->claves = nuevaTupla;
 }
 
 template <typename T>

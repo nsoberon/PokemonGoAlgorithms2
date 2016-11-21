@@ -1,8 +1,8 @@
 #include "Coordenada.h"
 
 Coordenada::Coordenada(){
-    this->latitudC =0;
-    this->longitudC =0;
+    this->latitudC = 0;
+    this->longitudC = 0;
 }
 
 Coordenada::~Coordenada(){

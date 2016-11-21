@@ -135,7 +135,9 @@ ColaPrior<T>::~ColaPrior(){
 
 template< typename T>
 void ColaPrior<T>::Destruir(){
-
+    while(this->cabeza != NULL){
+        this->Desencolar();
+    }
 }
 
 template< typename T>

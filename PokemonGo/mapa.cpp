@@ -15,15 +15,12 @@ void Mapa::EliminarMapa(){
 }
 
 void Mapa::crearMapa(){
-    aed2::Arreglo<aed2::Arreglo<aed2::Nat>>* matriz = new aed2::Arreglo<aed2::Arreglo<aed2::Nat>>(1);
-    aed2::Arreglo<aed2::Nat>* matrizY = new aed2::Arreglo<aed2::Nat>(1) ;
-    aed2::Conj<Coordenada>* coordenadas = new aed2::Conj<Coordenada>;
-    matrizY->Definir(0,0);
-    matriz->Definir(0,*matrizY);
-    this->coordenadasM = *coordenadas;
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>>(1);
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>> matriz = aed2::Arreglo<aed2::Arreglo<aed2::Nat>>(1);
+    matriz.Definir(0,aed2::Arreglo<aed2::Nat>(1));
     this->latitudMax = 0;
     this->longitudMax = 0;
-    this->matrizCaminos = *matriz;
+    this->matrizCaminos = matriz;
     this->marca = 1;
     }
 
@@ -50,20 +47,20 @@ void Mapa::agregarCoor(Coordenada c){
                 j++;
             }
         }
-        aed2::Arreglo<aed2::Nat>* nuevoArreglo = new aed2::Arreglo<aed2::Nat>(this->matrizCaminos[0].Tamanho() + 1);
+        aed2::Arreglo<aed2::Nat> nuevoArreglo = aed2::Arreglo<aed2::Nat>(this->matrizCaminos[0].Tamanho() + 1);
         int k = 0;
-        while(k < nuevoArreglo->Tamanho()){
-            nuevoArreglo->Definir(k,0);
+        while(k < nuevoArreglo.Tamanho()){
+            nuevoArreglo.Definir(k,0);
             k++;
         }
-        this->matrizCaminos.Definir(c.longitud(), *nuevoArreglo);
+        this->matrizCaminos.Definir(c.longitud(), nuevoArreglo);
         aed2::Nat i = longitudAnterior + 1;
         while(i < this->matrizCaminos.Tamanho()){
             if(i != c.longitud()){
                 if(!this->matrizCaminos.Definido(i)){
-                    this->matrizCaminos.Definir(i, *nuevoArreglo);
+                    this->matrizCaminos.Definir(i, nuevoArreglo);
                 }else{
-                    this->matrizCaminos[i] = *nuevoArreglo;
+                    this->matrizCaminos[i] = nuevoArreglo;
                 }
             }
             i++;
@@ -148,17 +145,17 @@ aed2::Arreglo<aed2::Nat> Mapa::vecinos(Coordenada c){
     if(this->posExistente(c.coordenadaALaIzquierda())){
         vecinos.AgregarAtras(c.coordenadaALaIzquierda());
     }
-    aed2::Arreglo<aed2::Nat>* res = new aed2::Arreglo<aed2::Nat> (vecinos.Longitud());
+    aed2::Arreglo<aed2::Nat> res = aed2::Arreglo<aed2::Nat> (vecinos.Longitud());
     aed2::Lista<Coordenada>::Iterador itVecinos = vecinos.CrearIt();
     aed2::Nat i = 0;
     while(itVecinos.HaySiguiente()){
         aed2::Nat lat = itVecinos.Siguiente().latitud();
         aed2::Nat lon = itVecinos.Siguiente().longitud();
-        res->Definir(i, this->matrizCaminos[lon][lat]);
+        res.Definir(i, this->matrizCaminos[lon][lat]);
         itVecinos.Avanzar();
         i++;
     }
-    return *res;
+    return res;
 
 }
 
