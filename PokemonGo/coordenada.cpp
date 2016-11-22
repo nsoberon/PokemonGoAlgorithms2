@@ -1,5 +1,10 @@
 #include "Coordenada.h"
 
+Coordenada::Coordenada(aed2::Nat x, aed2::Nat y){
+    this->latitudC = x;
+    this->longitudC = y;
+}
+
 Coordenada::Coordenada(){
     this->latitudC = 0;
     this->longitudC = 0;

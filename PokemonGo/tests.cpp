@@ -40,13 +40,8 @@ void test_cola_destructor(){
     nico.Encolar(10);
     nico.Encolar(12);
     nico.Encolar(15);
-    nico.Desencolar();
-    nico.Desencolar();
-    nico.Desencolar();
-    nico.Desencolar();
-    nico.Desencolar();
-    nico.Desencolar();
-    nico.Desencolar();
+    nico.Encolar(5);
+
     /*
     nico.Encolar(20);
     nico.Encolar(40);
@@ -74,6 +69,7 @@ void test_dicc_destructor(){
     nico.vacio();
     nico.Definir("asd",1);
     nico.Definir("nico",2);
+    nico.vaciar();
 }
 
 // TESTS JUEGO
@@ -308,10 +304,9 @@ void test_cola_copia(){
     nico.Encolar(1);
     nico.Encolar(2);
     nico.Encolar(6);
-    nico.Desencolar();
     ASSERT(nico.Desencolar() == 1);
     ASSERT(nico.Desencolar() == 2);
-    ASSERT(nico.Desencolar() == 3);
+    ASSERT(nico.Desencolar() == 6);
     nico.Encolar(1);
     nico.Encolar(2);
     nico.Encolar(3);
@@ -321,8 +316,8 @@ void test_cola_copia(){
     ASSERT(nico.Desencolar() == 2);
     ASSERT(nico.Desencolar() == 3);
     ASSERT(pedro.Desencolar() == 2);
-    ColaPrior<int>::Iterador apunta = pedro.Encolar(8);
-    apunta.EliminarSiguiente();
+    ASSERT(pedro.Desencolar() == 3);
+
 }
 
 void test_sancionar_bannear(){
@@ -681,25 +676,25 @@ int main(int argc, char **argv)
     //RUN_TEST(test_coordenada_destructor);
     //RUN_TEST(test_mapa_destructor);
     //RUN_TEST(test_juego_destructor);
-    RUN_TEST(test_cola_destructor);
+    //RUN_TEST(test_cola_destructor);
     //RUN_TEST(test_dicc_destructor);
 
     // TESTS JUEGO
-    //RUN_TEST(test_constructor_con_mapa);
-    //RUN_TEST(test_agregar_jugadores);
-    //RUN_TEST(test_agregar_pokemones);
-    //RUN_TEST(test_cola_copia);
-    //RUN_TEST(test_sancionar_bannear);
-    //RUN_TEST(test_bannear_eliminar_pokemons);
-    //RUN_TEST(test_conectarse_desconectarse);
-    /*RUN_TEST(test_moverse);
+    RUN_TEST(test_constructor_con_mapa);
+    RUN_TEST(test_agregar_jugadores);
+    RUN_TEST(test_agregar_pokemones);
+    RUN_TEST(test_sancionar_bannear);
+    RUN_TEST(test_bannear_eliminar_pokemons);
+    RUN_TEST(test_conectarse_desconectarse);
+    RUN_TEST(test_moverse);
     RUN_TEST(test_salir_zona_pokemon);
     RUN_TEST(test_jugador_pokemon_cercano);
     RUN_TEST(test_atrapa_el_de_menos);
     RUN_TEST(test_sanciones);
     RUN_TEST(test_posicion);
-*/
-
+    /*
+    */
+    RUN_TEST(test_cola_copia);
 
 
     // TESTS PARA HACER

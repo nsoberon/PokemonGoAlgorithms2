@@ -66,7 +66,12 @@ class DiccString {
                 * Devuelve las claves del diccionario.
                 --NO PRODUCE ALIASING--
                 **/
-                aed2::Conj<typename DiccString<T>::Tupla> Claves();
+                aed2::Conj<typename DiccString<T>::Tupla> Claves() const;
+
+
+                DiccString<T>& operator = (const DiccString<T> & c);
+
+                bool operator == (const DiccString<T> & c);
 
 
                 //ITERADOR
@@ -124,6 +129,9 @@ class DiccString {
                         clave = c;
                         significado = s;
                     }
+
+
+
                 };
 
                 struct Nodo{
@@ -213,6 +221,20 @@ void DiccString<T>::Iterador::EliminarSiguiente(){
 // Funciones de DiccString
 
 template <typename T>
+DiccString<T>& DiccString<T>::operator = (const DiccString<T> & c){
+
+}
+
+template <typename T>
+bool DiccString<T>::operator == (const DiccString<T> & c){
+    bool res;
+    res = this->Claves() == c.Claves();
+    return res;
+}
+
+
+
+template <typename T>
 DiccString<T>::Iterador::Iterador()
 {}
 
@@ -241,16 +263,15 @@ DiccString<T>::~DiccString(){
 
 template <typename T>
 void DiccString<T>::vaciar(){
-   /* aed2::Arreglo<aed2::String> claves = aed2::Arreglo<aed2::String>(this->claves.Cardinal());
+    /*laaed2::Lista<aed2::String> claves = aed2::Lista<aed2::String>();
     typename aed2::Conj<Tupla>::const_Iterador itConj = this->claves.CrearIt();
-    int i = 0;
     while(itConj.HaySiguiente()){
-        claves.Definir(i, itConj.Siguiente().clave);
+        claves.AgregarAtras(itConj.Siguiente().clave);
         itConj.Avanzar();
-        i++;
     }
-    for(int j = 0; j < claves.Tamanho(); j++){
-        this->Borrar(claves[j]);
+    while(claves.Longitud() > 0){
+        this->Borrar(claves.Primero());
+        claves.Fin();
     }*/
 }
 
@@ -261,7 +282,7 @@ void DiccString<T>::vacio(){
 }
 
 template <typename T>
-aed2::Conj<typename DiccString<T>::Tupla> DiccString<T>::Claves(){
+aed2::Conj<typename DiccString<T>::Tupla> DiccString<T>::Claves() const{
     return this->claves;
 }
 

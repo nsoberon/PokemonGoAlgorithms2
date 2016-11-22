@@ -44,8 +44,9 @@ class ColaPrior{
         T Desencolar();
         aed2::Nat Tamanio();
 
-        ColaPrior<T>& operator = (const ColaPrior& otra);
+        ColaPrior<T>& operator = (const ColaPrior& otra);                
 
+        bool operator == (const ColaPrior<T> & c);
 
         /************************************
         * Iterador de Cola de Prioridad *
@@ -60,6 +61,8 @@ class ColaPrior{
                 ColaPrior<T>* cola;
                 typename aed2::Conj<T>::Iterador it_cola_;
                 friend class ColaPrior;
+
+                bool operator == (const ColaPrior<T>::Iterador & c);
 
         public:
 
@@ -124,6 +127,11 @@ ColaPrior<T>& ColaPrior<T>::operator = (const ColaPrior& otra)
 
 }
 
+template <typename T>
+bool ColaPrior<T>::operator == (const ColaPrior& otra)
+{
+
+}
 
 
 template< typename T>
@@ -136,6 +144,7 @@ void ColaPrior<T>::Destruir(){
     while(this->cabeza != NULL){
         this->Desencolar();
     }
+
 }
 
 template< typename T>
@@ -206,9 +215,9 @@ T ColaPrior<T>::Desencolar(){
                     this->Intercambiar(actual, actual->izq);
                 }else{
                     if(actual->izq->dato < actual->dato){
-                        this->Intercambiar(actual, actual->der);
-                    }else
                         this->Intercambiar(actual, actual->izq);
+                    }else
+                        this->Intercambiar(actual, actual->der);
                 }
             }
         }
@@ -374,51 +383,42 @@ typename ColaPrior<T>::Nodo* ColaPrior<T>::ultimoPadre(){
 
 template< typename T>
 void ColaPrior<T>::Intercambiar(ColaPrior<T>::Nodo* padre, ColaPrior<T>::Nodo* hijo){
-/*if(hijo == padre->izq){
-    if(!hijo->der && !hijo->izq){
-        hijo->der = padre->der;
-        hijo->izq = padre;
-        padre->der = NULL;
-        padre->izq = NULL;
-    }else{
+
+    if(hijo == padre->izq){
+        Nodo* derPadre = padre->der;
         padre->der = hijo->der;
         padre->izq = hijo->izq;
         hijo->izq = padre;
-        hijo->der = padre->der;
-    }
-}else{
-    if(!hijo->der && !hijo->izq){
-        hijo->izq = padre->izq;
-        padre->padre = hijo;
-        padre->der = NULL;
-        padre->izq = NULL;
+        hijo->der = derPadre;
     }else{
-    padre->izq = hijo->izq;
-    padre->der = hijo->der;
-    hijo->der = padre;
-    hijo->izq = padre->izq;
+        Nodo* izqPadre = padre->izq;
+        padre->izq = hijo->izq;
+        padre->der = hijo->der;
+        hijo->der = padre;
+        hijo->izq = izqPadre;
     }
-}
-hijo->padre = padre->padre;
-padre->padre = hijo;
-if(!hijo->padre){
-    this->cabeza = hijo;
-}*/
-Nodo* aux = new Nodo(*padre);
+    hijo->padre = padre->padre;
+    padre->padre = hijo;
+    if(!hijo->padre){
+        this->cabeza = hijo;
+    }else if(hijo->padre->izq == padre){
+        hijo->padre->izq = hijo;
+    }else{
+        hijo->padre->der = hijo;
+    }
 
-padre->padre = hijo;
-padre->der = hijo->der;
-padre->izq = hijo->izq;
-
-hijo->padre = aux->padre;
-if(aux->izq = hijo){
-    hijo->izq = padre;
-    hijo->der = aux->der;
-}else{
-    hijo->der = padre;
-    hijo->izq = aux->izq;
-}
-
+    if(hijo->der){
+        hijo->der->padre = hijo;
+    }
+    if(hijo->izq){
+        hijo->izq->padre = hijo;
+    }
+    if(padre->der){
+        padre->der->padre = padre;
+    }
+    if(padre->izq){
+        padre->izq->padre = padre;
+    }
 
 };
 

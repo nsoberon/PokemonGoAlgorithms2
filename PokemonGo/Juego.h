@@ -23,12 +23,24 @@ class Juego{
             bool operator > (const JugadorEsperando & c) const{
                 return this->cantidadPokemonsAtrapados > c.cantidadPokemonsAtrapados;
             }
+
+            void operator = (const JugadorEsperando & c){
+                this->jugador = c.jugador;
+                this->cantidadPokemonsAtrapados = c.cantidadPokemonsAtrapados;
+            }
+
+            bool operator == (const JugadorEsperando & c){
+                bool res = false;
+                res = this->jugador == c.jugador;
+                res = res && this->cantidadPokemonsAtrapados == c.cantidadPokemonsAtrapados;
+                return res;
+            }
         };
 
         struct DatosPokemonSalvaje{
             Pokemon pokemon;
             Coordenada posicion;
-            ColaPrior<Juego::JugadorEsperando> jugadoresEsperando;
+            ColaPrior<Juego::JugadorEsperando> jugadoresEsperando;            
             aed2::Nat cantidadMovimientos;
             aed2::Conj<Coordenada>::Iterador referenciaPosiciones; // ESTO NO ESTA EN EL DISEÑO
             DatosPokemonSalvaje(Pokemon p, Coordenada c, ColaPrior<Juego::JugadorEsperando> cp, aed2::Conj<Coordenada>::Iterador itConj){
@@ -38,6 +50,25 @@ class Juego{
                 cantidadMovimientos = 0;
                 referenciaPosiciones = itConj;
             }
+
+            void operator = (const DatosPokemonSalvaje & c){
+                this->pokemon = c.pokemon;
+                this->posicion = c.posicion;
+                this->jugadoresEsperando = c.jugadoresEsperando;
+                this->cantidadMovimientos = c.cantidadMovimientos;
+                this->referenciaPosiciones = c.referenciaPosiciones;
+            }
+
+            bool operator == (const DatosPokemonSalvaje & c){
+                bool res = false;
+                res = this->pokemon == c.pokemon;
+                res = res && this->posicion == c.posicion;
+                res = res && this->jugadoresEsperando == c.jugadoresEsperando;
+                res = res && this->cantidadMovimientos == c.cantidadMovimientos;
+                res = res && this->referenciaPosiciones == c.referenciaPosiciones;
+                return res;
+            }
+
         };
 
         struct DatosJugador {
@@ -63,10 +94,35 @@ class Juego{
                 cantidadPokemonsAtrapados = 0;
                 banneado = false;
                 ColaPrior<Juego::JugadorEsperando> colaPoke;
+                colaPoke.Vacia();
                 ColaPrior<Juego::JugadorEsperando>::Iterador itColaPoke = colaPoke.CrearIterador(NULL);
                 esperandoParaCapturar = itColaPoke;
                 referenciaConjunto = refConj;
             }
+
+            void operator = (const DatosJugador & c){
+                this->id = c.id;
+                this->sanciones = c.sanciones;
+                this->posicion = c.posicion;
+                this->conectado = c.conectado;
+                this->pokemonsCapturados = c.pokemonsCapturados;
+                this->banneado = c.banneado;
+                this->esperandoParaCapturar = c.esperandoParaCapturar;
+                this->referenciaConjunto = c.referenciaConjunto;
+            }
+
+            bool operator == (const DatosJugador & c){
+                bool res = false;
+                res = this->id == c.id;
+                res = res && this->sanciones == c.sanciones;
+                res = res && this->posicion == c.posicion;
+                res = res && this->conectado == c.conectado;
+                //res = res && this->pokemonsCapturados == c.pokemonsCapturados;
+                res = res && this->banneado == c.banneado;
+                res = res && this->referenciaConjunto == c.referenciaConjunto;
+                return res;
+            }
+
         };
 
         struct JugadorPokemonEnMapa{
@@ -76,6 +132,17 @@ class Juego{
                 jugador = j;
                 pokemon = p;
             }
+
+            void operator = (const JugadorPokemonEnMapa & c){
+                this->jugador = c.jugador;
+                this->pokemon = c.pokemon;
+            }
+
+            bool operator == (const JugadorPokemonEnMapa & c){
+                this->jugador == c.jugador;
+                this->pokemon = c.pokemon;
+            }
+
         };
 
         aed2::Vector<Juego::DatosJugador> jugadoresVector;

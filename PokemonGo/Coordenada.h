@@ -18,6 +18,7 @@ class Coordenada{
 
     // Constructor y destructor
       Coordenada();
+      Coordenada(aed2::Nat, aed2::Nat);
       ~Coordenada();
 
 
