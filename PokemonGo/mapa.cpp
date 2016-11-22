@@ -15,8 +15,8 @@ void Mapa::EliminarMapa(){
 }
 
 void Mapa::crearMapa(){
-    aed2::Arreglo<aed2::Arreglo<aed2::Nat> >(1);
-    aed2::Arreglo<aed2::Arreglo<aed2::Nat> > matriz = aed2::Arreglo<aed2::Arreglo<aed2::Nat> >(1);
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>>(1);
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>> matriz = aed2::Arreglo<aed2::Arreglo<aed2::Nat>>(1);
     matriz.Definir(0,aed2::Arreglo<aed2::Nat>(1));
     this->latitudMax = 0;
     this->longitudMax = 0;
@@ -193,6 +193,6 @@ bool Mapa::operator == (const Mapa& m) const{
 
 // BORRAR ES PARA TEST
 
-aed2::Arreglo<aed2::Arreglo<aed2::Nat> > Mapa::verMatriz(){
+aed2::Arreglo<aed2::Arreglo<aed2::Nat>> Mapa::verMatriz(){
     return this->matrizCaminos;
 }

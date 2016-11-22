@@ -171,13 +171,13 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::Encolar(T elem){
     }
     this->tam ++;
 
-    return this->CrearIterador(nuevoNodo);;
+    return this->CrearIterador(nuevoNodo);
 };
 
 template< typename T>
 T ColaPrior<T>::Desencolar(){
     T res = this->cabeza->dato;
-    //this->cabeza->posicionEnConj.EliminarSiguiente();
+    this->cabeza->posicionEnConj.EliminarSiguiente();
     delete this->cabeza;
     aed2::Nat tam = this->tam;
     if(tam == 1){
@@ -195,13 +195,21 @@ T ColaPrior<T>::Desencolar(){
         this->cabeza = ultimo;
         Nodo* actual = ultimo;
         while((actual->izq && actual->dato > actual->izq->dato) || (actual->der && actual->dato > actual->der->dato)){
-            if(!actual->der){
-                this->Intercambiar(actual, actual->izq);
-            }else{
-                if(actual->izq->dato < actual->dato){
+            if((actual->izq && actual->dato > actual->izq->dato) && (actual->der && actual->dato > actual->der->dato)){
+                if(actual->izq->dato > actual->der->dato){
                     this->Intercambiar(actual, actual->der);
-                }else
+                }else{
                     this->Intercambiar(actual, actual->izq);
+                }
+            }else{
+                if(!actual->der){
+                    this->Intercambiar(actual, actual->izq);
+                }else{
+                    if(actual->izq->dato < actual->dato){
+                        this->Intercambiar(actual, actual->der);
+                    }else
+                        this->Intercambiar(actual, actual->izq);
+                }
             }
         }
     }
@@ -307,41 +315,111 @@ typename ColaPrior<T>::Nodo* ColaPrior<T>::ultimoNodo(){
 template< typename T>
 typename ColaPrior<T>::Nodo* ColaPrior<T>::ultimoPadre(){
     Nodo* ultimo = this->ultimoNodo();
+
+    /*if(ultimo == this->cabeza){
+        return ultimo;
+    }else if(this->tam == 2){
+        return ultimo->padre;
+    }else{
+        Nodo* actual = ultimo;
+        while(actual != this->cabeza && actual->padre->der == actual && actual->der != ultimo){
+            if(actual->izq != ultimo){
+                actual = actual->izq;
+            }else{
+                break;
+            }
+        }
+        return actual;
+    }*/
     if(ultimo == this->cabeza){
         return ultimo;
     }else{
         Nodo* actual = ultimo;
-        while(actual->padre->der == actual){
+        Nodo* anterior;
+        bool saliAntes = false;
+        if(ultimo->padre->der != ultimo){
+            return ultimo->padre;
+        }else{
+            anterior = actual;
             actual = actual->padre;
+            while(actual != this->cabeza && actual->der && actual->izq){
+                if(anterior == actual->izq && (!actual->der->izq || !actual->der->der)){
+                    actual = actual->der;
+                    saliAntes = true;
+                    break;
+                }
+                anterior = actual;
+                actual = actual->padre;
+            }
+            if(!saliAntes){
+                if(actual == this->cabeza){
+                    if(actual->der == anterior){
+                        while(actual->izq){
+                            actual = actual->izq;
+                        }
+                    }else{
+                        actual = actual->der;
+                        while(actual->izq){
+                            actual = actual->izq;
+                        }
+                    }
+                }else{
+                    actual = actual->der;
+                }
+            }
+            return actual;
+            }
         }
-        actual = actual->padre;
-        while(actual->izq){
-            actual = actual->izq;
-        }
-        return actual;
-    }
 };
 
 template< typename T>
 void ColaPrior<T>::Intercambiar(ColaPrior<T>::Nodo* padre, ColaPrior<T>::Nodo* hijo){
-if(hijo == padre->izq){
-    Nodo* derPadre = padre->der;
-    padre->der = hijo->der;
-    padre->izq = hijo->izq;
-    hijo->izq = padre;
-    hijo->der = derPadre;
+/*if(hijo == padre->izq){
+    if(!hijo->der && !hijo->izq){
+        hijo->der = padre->der;
+        hijo->izq = padre;
+        padre->der = NULL;
+        padre->izq = NULL;
+    }else{
+        padre->der = hijo->der;
+        padre->izq = hijo->izq;
+        hijo->izq = padre;
+        hijo->der = padre->der;
+    }
 }else{
-    Nodo* izqPadre = padre->izq;
+    if(!hijo->der && !hijo->izq){
+        hijo->izq = padre->izq;
+        padre->padre = hijo;
+        padre->der = NULL;
+        padre->izq = NULL;
+    }else{
     padre->izq = hijo->izq;
     padre->der = hijo->der;
     hijo->der = padre;
-    hijo->izq = izqPadre;
+    hijo->izq = padre->izq;
+    }
 }
 hijo->padre = padre->padre;
 padre->padre = hijo;
 if(!hijo->padre){
     this->cabeza = hijo;
+}*/
+Nodo* aux = new Nodo(*padre);
+
+padre->padre = hijo;
+padre->der = hijo->der;
+padre->izq = hijo->izq;
+
+hijo->padre = aux->padre;
+if(aux->izq = hijo){
+    hijo->izq = padre;
+    hijo->der = aux->der;
+}else{
+    hijo->der = padre;
+    hijo->izq = aux->izq;
 }
+
+
 };
 
 template< typename T>

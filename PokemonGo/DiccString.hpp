@@ -81,6 +81,7 @@ class DiccString {
                     bool HaySiguiente();
                     typename DiccString<T>::Tupla Siguiente();
                     void Avanzar();
+                    void EliminarSiguiente();
 
                   private:
 
@@ -205,6 +206,10 @@ void DiccString<T>::const_Iterador::Avanzar(){
     return it_dicc_.Avanzar();;
 }
 
+template <typename T>
+void DiccString<T>::Iterador::EliminarSiguiente(){
+}
+
 // Funciones de DiccString
 
 template <typename T>
@@ -226,7 +231,7 @@ DiccString<T>::const_Iterador::~const_Iterador()
 
 template <typename T>
 DiccString<T>::DiccString()
-    : raiz(NULL), claves(){
+    : raiz(NULL){
 }
 
 template <typename T>
@@ -236,18 +241,23 @@ DiccString<T>::~DiccString(){
 
 template <typename T>
 void DiccString<T>::vaciar(){
-    /*typename aed2::Conj<Tupla>::const_Iterador itConj = this->claves.CrearIt();
-    while(this->claves.Cardinal() > 0){
-        this->Borrar(itConj.Siguiente().clave);
+   /* aed2::Arreglo<aed2::String> claves = aed2::Arreglo<aed2::String>(this->claves.Cardinal());
+    typename aed2::Conj<Tupla>::const_Iterador itConj = this->claves.CrearIt();
+    int i = 0;
+    while(itConj.HaySiguiente()){
+        claves.Definir(i, itConj.Siguiente().clave);
         itConj.Avanzar();
+        i++;
+    }
+    for(int j = 0; j < claves.Tamanho(); j++){
+        this->Borrar(claves[j]);
     }*/
 }
 
 template <typename T>
 void DiccString<T>::vacio(){
-    aed2::Conj<Tupla> nuevaTupla = aed2::Conj<Tupla>();
-    this->raiz = NULL;
-    this->claves = nuevaTupla;
+
+    this->claves = aed2::Conj<Tupla>();
 }
 
 template <typename T>
@@ -279,10 +289,8 @@ void DiccString<T>::Definir(const string& clave, const T& significado){
         delete actual->significado;
         actual->posicionClaves.EliminarSiguiente();
     }
-    DiccString<T>::Tupla* nuevaTupla = new DiccString<T>::Tupla(clave, significado);
-    actual->posicionClaves = this->claves.AgregarRapido(*nuevaTupla);
-    T* nuevoSignificado = new T(significado);
-    actual->significado = nuevoSignificado;
+    actual->posicionClaves = this->claves.AgregarRapido(DiccString<T>::Tupla(clave, significado));
+    actual->significado = new T(significado);
 }
 
 
@@ -351,6 +359,7 @@ void DiccString<T>::Borrar(const string& clave) {
         }
         actual->posicionClaves.EliminarSiguiente();
         delete actual;
+        delete this->raiz;
         this->raiz = NULL;
     }else{
         // El nodo que tiene la significado de la clave

@@ -34,13 +34,46 @@ void test_cola_destructor(){
     ColaPrior<int> nico;
     nico.Vacia();
     nico.Encolar(1);
+    nico.Encolar(2);
+    nico.Encolar(3);
+    nico.Encolar(4);
+    nico.Encolar(10);
+    nico.Encolar(12);
+    nico.Encolar(15);
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    /*
+    nico.Encolar(20);
+    nico.Encolar(40);
+    nico.Encolar(50);
+    nico.Encolar(60);
+    nico.Encolar(80);
+    nico.Encolar(90);
+    nico.Encolar(100);
+    nico.Encolar(120);
+    nico.Encolar(150);
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();
+    nico.Desencolar();*/
 }
 
 void test_dicc_destructor(){
     DiccString<int> nico;
     nico.vacio();
-    nico.Definir("nico",1);
-    nico.Borrar("nico");
+    nico.Definir("asd",1);
+    nico.Definir("nico",2);
 }
 
 // TESTS JUEGO
@@ -274,7 +307,8 @@ void test_cola_copia(){
     nico.Vacia();
     nico.Encolar(1);
     nico.Encolar(2);
-    nico.Encolar(3);
+    nico.Encolar(6);
+    nico.Desencolar();
     ASSERT(nico.Desencolar() == 1);
     ASSERT(nico.Desencolar() == 2);
     ASSERT(nico.Desencolar() == 3);
@@ -647,18 +681,18 @@ int main(int argc, char **argv)
     //RUN_TEST(test_coordenada_destructor);
     //RUN_TEST(test_mapa_destructor);
     //RUN_TEST(test_juego_destructor);
-    //RUN_TEST(test_cola_destructor);
-    RUN_TEST(test_dicc_destructor);
+    RUN_TEST(test_cola_destructor);
+    //RUN_TEST(test_dicc_destructor);
 
     // TESTS JUEGO
-    /*RUN_TEST(test_constructor_con_mapa);
-    RUN_TEST(test_agregar_jugadores);
-    RUN_TEST(test_agregar_pokemones);
-    RUN_TEST(test_cola_copia);
-    RUN_TEST(test_sancionar_bannear);
-    RUN_TEST(test_bannear_eliminar_pokemons);
-    RUN_TEST(test_conectarse_desconectarse);
-    RUN_TEST(test_moverse);
+    //RUN_TEST(test_constructor_con_mapa);
+    //RUN_TEST(test_agregar_jugadores);
+    //RUN_TEST(test_agregar_pokemones);
+    //RUN_TEST(test_cola_copia);
+    //RUN_TEST(test_sancionar_bannear);
+    //RUN_TEST(test_bannear_eliminar_pokemons);
+    //RUN_TEST(test_conectarse_desconectarse);
+    /*RUN_TEST(test_moverse);
     RUN_TEST(test_salir_zona_pokemon);
     RUN_TEST(test_jugador_pokemon_cercano);
     RUN_TEST(test_atrapa_el_de_menos);

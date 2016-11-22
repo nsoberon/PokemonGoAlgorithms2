@@ -15,7 +15,7 @@ class Mapa {
     aed2::Nat latitudMax;
     aed2::Nat longitudMax;
     aed2::Conj<Coordenada> coordenadasM;
-    aed2::Arreglo<aed2::Arreglo<aed2::Nat> > matrizCaminos;
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>> matrizCaminos;
     aed2::Nat marca;
 
 
@@ -43,7 +43,7 @@ public:
     aed2::Nat maximaLongitud();
 
     // BORRAR ES SOLO PARA TEST
-    aed2::Arreglo<aed2::Arreglo<aed2::Nat> > verMatriz();
+    aed2::Arreglo<aed2::Arreglo<aed2::Nat>> verMatriz();
     // BORRAR ES SOLO PARA TEST
 
     bool operator == (const Mapa & m) const;
@@ -51,3 +51,4 @@ public:
 
 
 #endif // MAPA
+
