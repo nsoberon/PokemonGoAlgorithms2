@@ -11,6 +11,7 @@ Driver::Driver(const aed2::Conj< Coordenada > & cs)
     m.crearMapa();
     aed2::Conj<Coordenada>::const_Iterador itCoor = cs.CrearIt();
     while(itCoor.HaySiguiente()){
+        Coordenada a = itCoor.Siguiente();
         m.agregarCoor(itCoor.Siguiente());
         itCoor.Avanzar();
     }
@@ -135,20 +136,20 @@ Pokemon Driver::pokemonEnPos(const Coordenada & c) const{
 /* Dada una coordenada, devuelve el valor del contador de movimientos fuera del rango.
 * Es requisito que en la coordenada pasada como parametro haya un pokemon. */
 Nat Driver::cantMovimientosParaCaptura(const Coordenada & c) const{
-    this->juegoDriver.cantidadMovimientosParaCapturar(c);
+   return this->juegoDriver.cantidadMovimientosParaCapturar(c);
 }
 
 /* Dada una coordenada cualquiera, indica si la coordenada existe en el mapa y
  * que hay un pokemon a distancia menor o igual a 5. */
 
 bool Driver::puedoAgregarPokemon(const Coordenada & c) const{
-    this->juegoDriver.puedoAgregarPokemon(c);
+   return this->juegoDriver.puedoAgregarPokemon(c);
 }
 
 /* Devuelve si hay un pokemon a distancia menor o igual a 2
  * de la Coordenada pasada como parametro. */
 bool Driver::hayPokemonCercano(const Coordenada & c) const{
-    this->juegoDriver.hayPokemonCercano(c);
+   return this->juegoDriver.hayPokemonCercano(c);
 }
 
 /* Dada una Coordenada, devuelve la coordenada del pokemon cercano.
@@ -165,14 +166,11 @@ Conj<Jugador> Driver::entrenadoresPosibles(const Coordenada & c) const{
     return this->juegoDriver.entrenadoresPosibles(c);
 }
 
-/*aed2::Nat Driver::entrenadoresPosibles(const Coordenada &c) const{
-    return this->juegoDriver.entrenadoresPosibles(c);
-}*/
 
 /* Devuelve el indice de rarez del pokemon pasado como parametro.
  * Requiere que haya al menos un pokemon de la especie en el juego. */
 Nat Driver::indiceRareza(const Pokemon & p) const{
-    this->juegoDriver.indiceRareza(p);
+    return this->juegoDriver.indiceRareza(p);
 }
 
 /* Devuelve la cantidad de pokemons totales en el juego. */

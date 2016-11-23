@@ -3,6 +3,9 @@
 
 #include "TiposJuego.h"
 #include "Mapa.h"
+#include "DiccString.hpp"
+#include "ColaPrior.hpp"
+#include "aed2/Vector.h"
 
 class Juego{
     private:
@@ -29,7 +32,7 @@ class Juego{
                 this->cantidadPokemonsAtrapados = c.cantidadPokemonsAtrapados;
             }
 
-            bool operator == (const JugadorEsperando & c){
+            bool operator == (const JugadorEsperando & c) const{
                 bool res = false;
                 res = this->jugador == c.jugador;
                 res = res && this->cantidadPokemonsAtrapados == c.cantidadPokemonsAtrapados;
@@ -81,6 +84,7 @@ class Juego{
             bool banneado;
             ColaPrior<Juego::JugadorEsperando>::Iterador esperandoParaCapturar;
             aed2::Conj<aed2::Nat>::Iterador referenciaConjunto;
+            aed2::Conj<Juego::DatosJugador*>::Iterador referenciaMapa; // NO ESTABA EN EL DISEÑO, SE AGREGA PARA CONTEMPLAR QUE HAYA MAS DE UN JUGADOR EN LA MISMA POS
             DatosJugador(aed2::Nat i, aed2::Conj<aed2::Nat>::Iterador refConj){
                 id = i;
                 sanciones = 0;
@@ -117,7 +121,7 @@ class Juego{
                 res = res && this->sanciones == c.sanciones;
                 res = res && this->posicion == c.posicion;
                 res = res && this->conectado == c.conectado;
-                //res = res && this->pokemonsCapturados == c.pokemonsCapturados;
+                res = res && this->pokemonsCapturados == c.pokemonsCapturados;
                 res = res && this->banneado == c.banneado;
                 res = res && this->referenciaConjunto == c.referenciaConjunto;
                 return res;
@@ -126,21 +130,22 @@ class Juego{
         };
 
         struct JugadorPokemonEnMapa{
-            Juego::DatosJugador* jugador;
+            aed2::Conj<Juego::DatosJugador*> jugadores; // NO ESTABA EN EL DISEÑO, SE AGREGA PARA CONTEMPLAR QUE HAYA MAS DE UN JUGADOR EN LA MISMA POS
             Juego::DatosPokemonSalvaje* pokemon;
-            JugadorPokemonEnMapa(Juego::DatosJugador* j, Juego::DatosPokemonSalvaje* p){
-                jugador = j;
+            JugadorPokemonEnMapa(aed2::Conj<Juego::DatosJugador*> j, Juego::DatosPokemonSalvaje* p){
+                jugadores = j;
                 pokemon = p;
             }
 
             void operator = (const JugadorPokemonEnMapa & c){
-                this->jugador = c.jugador;
+                this->jugadores = c.jugadores;
                 this->pokemon = c.pokemon;
             }
 
             bool operator == (const JugadorPokemonEnMapa & c){
-                this->jugador == c.jugador;
-                this->pokemon = c.pokemon;
+                bool res = this->jugadores == c.jugadores;
+                res = res && this->pokemon == c.pokemon;
+                return res;
             }
 
         };

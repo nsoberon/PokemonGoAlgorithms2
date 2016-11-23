@@ -7,10 +7,6 @@ Mapa::Mapa(){
 }
 
 Mapa::~Mapa(){
-    this->EliminarMapa();
-}
-
-void Mapa::EliminarMapa(){
 
 }
 
@@ -40,48 +36,41 @@ void Mapa::agregarCoor(Coordenada c){
     if(cambioLongitud){
         this->matrizCaminos.Redimensionar(c.longitud() + 1);
         if(cambioLatitud){
-            int j = 0;
-            while(j <= longitudAnterior){
-                this->matrizCaminos[j].Redimensionar(c.latitud() + 1);
-                this->matrizCaminos[j].Definir(c.latitud(), 0);
+            aed2::Nat j = 0;
+            while(j < this->matrizCaminos.Tamanho()){
+                if(this->matrizCaminos.Definido(j)){
+                    this->matrizCaminos[j].Redimensionar(c.latitud() + 1);
+                }else{
+                    aed2::Arreglo<aed2::Nat> nuevoArreglo(c.latitud() + 1);
+                    this->matrizCaminos.Definir(j, nuevoArreglo);
+                }
+                j++;
+            }
+        }else{
+            aed2::Nat j = 0;
+            while(j < this->matrizCaminos.Tamanho()){
+                if(!this->matrizCaminos.Definido(j)){
+                    aed2::Arreglo<aed2::Nat> nuevoArreglo(this->latitudMax + 1);
+                    this->matrizCaminos.Definir(j, nuevoArreglo);
+                }
                 j++;
             }
         }
-        aed2::Arreglo<aed2::Nat> nuevoArreglo = aed2::Arreglo<aed2::Nat>(this->matrizCaminos[0].Tamanho() + 1);
-        int k = 0;
-        while(k < nuevoArreglo.Tamanho()){
-            nuevoArreglo.Definir(k,0);
-            k++;
-        }
-        this->matrizCaminos.Definir(c.longitud(), nuevoArreglo);
-        aed2::Nat i = longitudAnterior + 1;
-        while(i < this->matrizCaminos.Tamanho()){
-            if(i != c.longitud()){
-                if(!this->matrizCaminos.Definido(i)){
-                    this->matrizCaminos.Definir(i, nuevoArreglo);
-                }else{
-                    this->matrizCaminos[i] = nuevoArreglo;
-                }
-            }
-            i++;
-        }
     }else{
         if(cambioLatitud){
-            int j = 0;
-            while(j < this->longitudMax){
+            aed2::Nat j = 0;
+            while(j < this->matrizCaminos.Tamanho()){
                 this->matrizCaminos[j].Redimensionar(c.latitud() + 1);
                 j++;
             }
         }else{
             if(!this->matrizCaminos[c.longitud()].Definido(c.latitud())){
                 this->matrizCaminos[c.longitud()].Definir(c.latitud(), 0);
-            }else{
-                this->matrizCaminos[c.longitud()][c.latitud()] = 0;
             }
         }
     }
-    for(int i = 0; i < this->matrizCaminos.Tamanho(); i ++){
-        for(int j = 0; j < this->matrizCaminos[i].Tamanho(); j++){
+    for(aed2::Nat i = 0; i < this->matrizCaminos.Tamanho(); i ++){
+        for(aed2::Nat j = 0; j < this->matrizCaminos[i].Tamanho(); j++){
             if(!this->matrizCaminos[i].Definido(j)){
                 this->matrizCaminos[i].Definir(j,0);
             }
@@ -161,14 +150,13 @@ aed2::Arreglo<aed2::Nat> Mapa::vecinos(Coordenada c){
 
 void Mapa::marcarVecinos(aed2::Nat color, aed2::Arreglo<aed2::Nat> pinto){
     Coordenada c;
-    for(int i = 0; i < this->matrizCaminos.Tamanho(); i++){
-        for(int j = 0; j < this->matrizCaminos[i].Tamanho(); j++){
+    for(aed2::Nat i = 0; i < this->matrizCaminos.Tamanho(); i++){
+        for(aed2::Nat j = 0; j < this->matrizCaminos[i].Tamanho(); j++){
             c.crearCoor(j,i);
             if(this->posExistente(c)){
                 aed2::Nat elem = this->matrizCaminos[i][j];
                 bool esta = false;
-                for(int k = 0; k < pinto.Tamanho(); k ++){
-                    aed2::Nat bug = pinto[k];
+                for(aed2::Nat k = 0; k < pinto.Tamanho(); k ++){
                     if(pinto[k] == elem){
                         esta = true;
                         break;
@@ -188,6 +176,7 @@ bool Mapa::operator == (const Mapa& m) const{
     res = res && (this->longitudMax == m.longitudMax);
     res = res && (this->marca == m.marca);
     res = res && (this->coordenadasM == m.coordenadasM);
+    return res;
 }
 
 

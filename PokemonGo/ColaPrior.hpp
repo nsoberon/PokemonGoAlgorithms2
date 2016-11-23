@@ -2,7 +2,6 @@
 #define COLAPRIOR_H
 
 #include "aed2/TiposBasicos.h"
-#include "aed2/Lista.h"
 #include "aed2/Conj.h"
 
 template<class T>
@@ -124,20 +123,21 @@ ColaPrior<T>& ColaPrior<T>::operator = (const ColaPrior& otra)
         this->Encolar(it.Siguiente());
         it.Avanzar();
     }
+    return *this;
 
 }
 
 template <typename T>
 bool ColaPrior<T>::operator == (const ColaPrior& otra)
 {
-
+    return this->elementos_ == otra.elementos_;
 }
 
 
 template< typename T>
 ColaPrior<T>::~ColaPrior(){
     this->Destruir();
-};
+}
 
 template< typename T>
 void ColaPrior<T>::Destruir(){
@@ -252,7 +252,7 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::CrearIterador(ColaPrior<T>::Nodo* 
 
 template< typename T>
 void ColaPrior<T>::Iterador::EliminarSiguiente(){
-    Nodo* ultimo = this->cola->ultimoNodo();
+    //Nodo* ultimo = this->cola->ultimoNodo();
     Nodo* elem = this->siguiente;
     if(elem == this->cola->cabeza){
         this->cola->Desencolar();
@@ -274,7 +274,7 @@ void ColaPrior<T>::Iterador::EliminarSiguiente(){
         }
         Nodo* actual = ultimo;
         ColaPrior<T>* cp = this->cola;
-        while((actual->izq && actual->dato > actual->izq->dato) || actual->der && (actual->dato > actual->der->dato)){
+        while((actual->izq && actual->dato > actual->izq->dato) || (actual->der && actual->dato > actual->der->dato)){
             if(!actual->der || actual->izq->dato < actual->dato){
                 cp->Intercambiar(actual, actual->izq);
             }else{

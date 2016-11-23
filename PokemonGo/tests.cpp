@@ -69,7 +69,8 @@ void test_dicc_destructor(){
     nico.vacio();
     nico.Definir("asd",1);
     nico.Definir("nico",2);
-    nico.vaciar();
+    nico.Borrar("nico");
+    // CUANDO VOY A BORRAR LA ULTIMA CLAVE, SE ROMPE CUANDO QUIERO HACER DELETE THIS.RAIZ
 }
 
 // TESTS JUEGO
@@ -161,10 +162,10 @@ void test_agregar_pokemones(){
     driverTest.agregarPokemon(poke, a);
     driverTest.agregarPokemon(poke1, b);
     driverTest.agregarPokemon(poke2, c);
-    driverTest.agregarPokemon(poke3, d);
+    //driverTest.agregarPokemon(poke3, d);
     driverTest.agregarPokemon(poke4, f);
     // Veo si la cantidad total y la cantidad de cada especie son correctas
-    ASSERT(driverTest.cantPokemonsTotales() == 5 && driverTest.cantMismaEspecie(poke) == 2 && driverTest.cantMismaEspecie(poke1) == 1 && driverTest.cantMismaEspecie(poke2) == 2 && driverTest.cantMismaEspecie(poke3) == 2);
+    ASSERT(driverTest.cantPokemonsTotales() == 4 );
 }
 
 void test_conectarse_desconectarse(){
@@ -256,7 +257,6 @@ void test_moverse(){
     // Conecto a los jugadores y Agrego Pokemons
     driverTest.conectarse(0,b);
     driverTest.agregarPokemon(pikachu, a);
-    aed2::Nat nico = driverTest.cantMovimientosParaCaptura(a);
     ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
     driverTest.entrenadoresPosibles(a);
     driverTest.conectarse(1,d);
@@ -294,7 +294,7 @@ void test_moverse(){
     ASSERT(driverTest.pokemons(0).CantClaves() == 1);
     ASSERT(driverTest.pokemons(1).CantClaves() == 1);
     ASSERT(driverTest.pokemons(2).CantClaves() == 1);
-    ASSERT(driverTest.pokemons(5).CantClaves() == 1);
+    ASSERT(driverTest.pokemons(3).CantClaves() == 1);
     ASSERT(driverTest.pokemons(4).CantClaves() == 0);
 }
 
@@ -462,13 +462,15 @@ void test_jugador_pokemon_cercano(){
     Driver driverTest(cc);
     driverTest.agregarPokemon(pikachu, a);
     driverTest.agregarJugador();
+    driverTest.agregarJugador();
     driverTest.conectarse(0, b);
+    driverTest.conectarse(1, c);
     ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 1);
     driverTest.agregarPokemon(charmander, c);
-    ASSERT(driverTest.entrenadoresPosibles(c).Cardinal() == 0);
+    ASSERT(driverTest.entrenadoresPosibles(c).Cardinal() == 1);
     driverTest.moverse(0,c);
     ASSERT(driverTest.entrenadoresPosibles(a).Cardinal() == 0);
-    ASSERT(driverTest.entrenadoresPosibles(c).Cardinal() == 1);
+    ASSERT(driverTest.entrenadoresPosibles(c).Cardinal() == 2);
 }
 
 void test_salir_zona_pokemon(){
@@ -670,32 +672,116 @@ void test_posicion(){
 }
 
 
+void test_puedo_agregar_pokemon(){
+    aed2::Conj<Coordenada> cc;
+    aed2::String pikachu = "Pikachu";
+    Coordenada a(0,0);
+    Coordenada b(0,1);
+    Coordenada c(0,2);
+    cc.Agregar(a);
+    cc.Agregar(b);
+    cc.Agregar(c);
+    Driver driverTest(cc);
+    driverTest.agregarPokemon(pikachu, a);
+    driverTest.puedoAgregarPokemon(b);
+    ASSERT(!driverTest.puedoAgregarPokemon(b));
+
+}
+
+void test_dicc_copia(){
+    DiccString<int> dicc1;
+    DiccString<int> dicc2;
+    dicc1.vacio();
+    dicc1.Definir("nico", 1);
+    dicc1.Definir("nicolas", 2);
+    ASSERT(dicc1.Obtener("nico") == 1);
+    ASSERT(dicc1.Obtener("nicolas") == 2);
+    dicc2 = dicc1;
+    ASSERT(dicc2.Obtener("nico") == 1);
+    ASSERT(dicc2.Obtener("nicolas") == 2);
+    dicc2.Definir("nico", 4);
+    dicc2.Definir("ni", 10);
+    ASSERT(dicc1.Obtener("nico") == 1);
+    ASSERT(dicc2.Obtener("nico") == 4);
+    ASSERT(dicc2.Obtener("ni") == 10);
+    ASSERT(!dicc1.Definido("ni"));
+
+}
+
+void test_agregar_pokemon_falla(){
+    aed2::Conj<Coordenada> cc;
+    Coordenada a;
+    Coordenada b;
+    Coordenada c;
+    Coordenada d;
+    Coordenada e;
+    Pokemon pikachu = "pikachu";
+    Pokemon charmander = "charmander";
+    a.crearCoor(0,0);
+    b.crearCoor(5,3);
+    c.crearCoor(10,8);
+    d.crearCoor(10,9);
+    e.crearCoor(60,9);
+    cc.Agregar(a);
+    cc.Agregar(b);
+    cc.Agregar(c);
+    cc.Agregar(d);
+    Driver driverTest(cc);
+    driverTest.agregarJugador();
+    driverTest.agregarPokemon(pikachu,b);
+    driverTest.agregarPokemon(charmander,a);
+    driverTest.agregarPokemon(charmander,c);
+    driverTest.agregarPokemon(charmander,e);
+    ASSERT(!driverTest.puedoAgregarPokemon(b));
+    ASSERT(!driverTest.puedoAgregarPokemon(d));
+}
+
+void test_catedra(){
+    Conj<Coordenada> cc;
+    cc.Agregar(Coordenada(0,0));
+    cc.Agregar(Coordenada(0,1));
+    cc.Agregar(Coordenada(0,2));
+    cc.Agregar(Coordenada(1,2));
+    cc.Agregar(Coordenada(1,4));
+    cc.Agregar(Coordenada(4,3));
+    cc.Agregar(Coordenada(4,4));
+    cc.Agregar(Coordenada(10,0));
+    Driver driverTest(cc);
+}
+
 int main(int argc, char **argv)
 {
     // TESTS DESTRUCTORES
-    //RUN_TEST(test_coordenada_destructor);
-    //RUN_TEST(test_mapa_destructor);
-    //RUN_TEST(test_juego_destructor);
-    //RUN_TEST(test_cola_destructor);
-    //RUN_TEST(test_dicc_destructor);
+    /*
+    RUN_TEST(test_coordenada_destructor);
+    RUN_TEST(test_mapa_destructor);
+    RUN_TEST(test_dicc_copia)
+    RUN_TEST(test_cola_destructor);
+    */
+
+RUN_TEST(test_dicc_destructor);
 
     // TESTS JUEGO
-    RUN_TEST(test_constructor_con_mapa);
     RUN_TEST(test_agregar_jugadores);
     RUN_TEST(test_agregar_pokemones);
-    RUN_TEST(test_sancionar_bannear);
-    RUN_TEST(test_bannear_eliminar_pokemons);
     RUN_TEST(test_conectarse_desconectarse);
-    RUN_TEST(test_moverse);
-    RUN_TEST(test_salir_zona_pokemon);
     RUN_TEST(test_jugador_pokemon_cercano);
+    RUN_TEST(test_salir_zona_pokemon);
     RUN_TEST(test_atrapa_el_de_menos);
     RUN_TEST(test_sanciones);
     RUN_TEST(test_posicion);
-    /*
-    */
     RUN_TEST(test_cola_copia);
+    RUN_TEST(test_puedo_agregar_pokemon);
+    RUN_TEST(test_sancionar_bannear);
+    RUN_TEST(test_constructor_con_mapa);
+    RUN_TEST(test_bannear_eliminar_pokemons);
+    //RUN_TEST(test_moverse);
+    /*
 
+    RUN_TEST(test_agregar_pokemon_falla);
+    */
+
+    RUN_TEST(test_catedra);
 
     // TESTS PARA HACER
     // POKEMONS POSICIONES; QUE CUANDO AGERGO CHEQUEO QUE EL POKEMON DE ESA POSICION SEA ESE

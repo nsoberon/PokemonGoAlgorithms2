@@ -43,7 +43,7 @@ aed2::Nat Coordenada::distEuclidea(Coordenada c){
     }else{
         lo = longD - longC;
     }
-    return la*la + lo*lo;
+    return (la*la + lo*lo);
 }
 
 Coordenada Coordenada::coordenadaArriba(){

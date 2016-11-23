@@ -1,11 +1,13 @@
 #ifndef DICC_STRING_H_
 #define DICC_STRING_H_
 
-#include "aed2/Conj.h"
 #include "TiposJuego.h"
+#include "aed2/Conj.h"
+
 #include <string>
 #include <iostream>
 #include <cassert>
+
 using namespace std;
 
 
@@ -130,6 +132,10 @@ class DiccString {
                         significado = s;
                     }
 
+                    bool operator == (const Tupla & t) const
+                    {
+                       return ( clave == t.clave )  && ( significado == t.significado );
+                    }
 
 
                 };
@@ -222,6 +228,13 @@ void DiccString<T>::Iterador::EliminarSiguiente(){
 
 template <typename T>
 DiccString<T>& DiccString<T>::operator = (const DiccString<T> & c){
+    this->vacio();
+    DiccString<T>::const_Iterador itConj = c.CrearIt();
+    while(itConj.HaySiguiente()){
+        this->Definir(itConj.Siguiente().clave, itConj.Siguiente().significado);
+        itConj.Avanzar();
+    }
+    return *this;
 
 }
 
@@ -263,15 +276,14 @@ DiccString<T>::~DiccString(){
 
 template <typename T>
 void DiccString<T>::vaciar(){
-    /*laaed2::Lista<aed2::String> claves = aed2::Lista<aed2::String>();
-    typename aed2::Conj<Tupla>::const_Iterador itConj = this->claves.CrearIt();
-    while(itConj.HaySiguiente()){
-        claves.AgregarAtras(itConj.Siguiente().clave);
+    //aed2::Conj<Tupla> test(this->claves);
+    //typename aed2::Conj<Tupla>::const_Iterador itConj = test.CrearIt();
+   // this->Borrar("nico");
+    //this->Borrar("asd");
+    /*    while(itConj.HaySiguiente()){
+        cout << itConj.Siguiente().clave << endl;
+        //this->Borrar(itConj.Siguiente().clave);
         itConj.Avanzar();
-    }
-    while(claves.Longitud() > 0){
-        this->Borrar(claves.Primero());
-        claves.Fin();
     }*/
 }
 

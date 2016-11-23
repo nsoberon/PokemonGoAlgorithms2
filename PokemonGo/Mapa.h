@@ -4,9 +4,11 @@
 #include <string>
 #include <ostream>
 #include <iostream>
+#include "TiposJuego.h"
 #include "Coordenada.h"
 #include "aed2/Conj.h"
 #include "aed2/Lista.h"
+#include "aed2/Arreglo.h"
 
 class Mapa {
 
@@ -27,7 +29,6 @@ public:
   // Constructor y destructor
     Mapa();
     ~Mapa();
-    void EliminarMapa();
 
   // Generadores
     void crearMapa();
