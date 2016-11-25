@@ -151,6 +151,7 @@ class DiccString {
                             siguientes[i] = NULL;
                         }
                         significado = NULL;
+                        cantidadSiguientes = 0;
                     }
                     ~Nodo(){
                         delete significado;
@@ -276,15 +277,12 @@ DiccString<T>::~DiccString(){
 
 template <typename T>
 void DiccString<T>::vaciar(){
-    //aed2::Conj<Tupla> test(this->claves);
-    //typename aed2::Conj<Tupla>::const_Iterador itConj = test.CrearIt();
-   // this->Borrar("nico");
-    //this->Borrar("asd");
-    /*    while(itConj.HaySiguiente()){
-        cout << itConj.Siguiente().clave << endl;
-        //this->Borrar(itConj.Siguiente().clave);
+    aed2::Conj<Tupla> test(this->claves);
+    typename aed2::Conj<Tupla>::const_Iterador itConj = test.CrearIt();
+    while(itConj.HaySiguiente()){
+        this->Borrar(itConj.Siguiente().clave);
         itConj.Avanzar();
-    }*/
+    }
 }
 
 template <typename T>
@@ -320,6 +318,8 @@ void DiccString<T>::Definir(const string& clave, const T& significado){
     }
     if(actual->significado){
         delete actual->significado;
+    }
+    if(actual->posicionClaves.HaySiguiente()){
         actual->posicionClaves.EliminarSiguiente();
     }
     actual->posicionClaves = this->claves.AgregarRapido(DiccString<T>::Tupla(clave, significado));
@@ -392,7 +392,6 @@ void DiccString<T>::Borrar(const string& clave) {
         }
         actual->posicionClaves.EliminarSiguiente();
         delete actual;
-        delete this->raiz;
         this->raiz = NULL;
     }else{
         // El nodo que tiene la significado de la clave
@@ -463,8 +462,8 @@ void DiccString<T>::Borrar(const string& clave) {
 
 template <typename T>
 bool DiccString<T>::borrarRama(Nodo* a, int x, string clave){
-    int i = x+1;
-    a = a->siguientes[clave[int(x)]];
+    aed2::Nat i = x+1;
+    a = a->siguientes[clave[x]];
     while(i < clave.length()){
         if(a->cantidadSiguientes > 1 || a->significado){
             return false;

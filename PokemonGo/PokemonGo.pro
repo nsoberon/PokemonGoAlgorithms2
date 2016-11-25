@@ -1,7 +1,7 @@
 QT += core
 QT -= gui
 
-TARGET = PokemonGo
+TARGET = tests
 CONFIG += console
 CONFIG -= app_bundle
 

@@ -23,13 +23,11 @@ void Mapa::crearMapa(){
 void Mapa::agregarCoor(Coordenada c){
     bool cambioLatitud = false;
     bool cambioLongitud = false;
-    aed2::Nat latitudAnterior = this->latitudMax;
-    aed2::Nat longitudAnterior = this->longitudMax;
-    if(c.latitud() > latitudAnterior){
+    if(c.latitud() > this->latitudMax){
         this->latitudMax = c.latitud();
         cambioLatitud = true;
     }
-    if(c.longitud() > longitudAnterior){
+    if(c.longitud() > this->longitudMax){
         this->longitudMax = c.longitud();
         cambioLongitud = true;
     }
@@ -62,10 +60,6 @@ void Mapa::agregarCoor(Coordenada c){
             while(j < this->matrizCaminos.Tamanho()){
                 this->matrizCaminos[j].Redimensionar(c.latitud() + 1);
                 j++;
-            }
-        }else{
-            if(!this->matrizCaminos[c.longitud()].Definido(c.latitud())){
-                this->matrizCaminos[c.longitud()].Definir(c.latitud(), 0);
             }
         }
     }

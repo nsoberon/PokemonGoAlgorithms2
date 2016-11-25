@@ -85,6 +85,7 @@ class Juego{
             ColaPrior<Juego::JugadorEsperando>::Iterador esperandoParaCapturar;
             aed2::Conj<aed2::Nat>::Iterador referenciaConjunto;
             aed2::Conj<Juego::DatosJugador*>::Iterador referenciaMapa; // NO ESTABA EN EL DISEÑO, SE AGREGA PARA CONTEMPLAR QUE HAYA MAS DE UN JUGADOR EN LA MISMA POS
+            DatosJugador(){};
             DatosJugador(aed2::Nat i, aed2::Conj<aed2::Nat>::Iterador refConj){
                 id = i;
                 sanciones = 0;
@@ -109,6 +110,7 @@ class Juego{
                 this->sanciones = c.sanciones;
                 this->posicion = c.posicion;
                 this->conectado = c.conectado;
+                this->cantidadPokemonsAtrapados = c.cantidadPokemonsAtrapados;
                 this->pokemonsCapturados = c.pokemonsCapturados;
                 this->banneado = c.banneado;
                 this->esperandoParaCapturar = c.esperandoParaCapturar;
