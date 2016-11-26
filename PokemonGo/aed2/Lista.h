@@ -17,6 +17,19 @@ namespace aed2
 template <typename T>
 class Lista
 {
+  private:
+    struct Nodo
+    {
+        Nodo(const T& d) : dato(d), anterior(NULL), siguiente(NULL) {};
+
+        T dato;
+        Nodo* anterior;
+        Nodo* siguiente;
+    };
+
+    Nodo* primero_;
+    Nat longitud_;
+
   public:
   // forward declarations
   // Las estructuras estan definidas mas abajo
@@ -158,20 +171,6 @@ class Lista
       //devuelve el nodo siguiente en la lista circular
       const typename Lista<T>::Nodo* SiguienteReal() const;
   };
-
-private:
-
-  struct Nodo
-  {
-    Nodo(const T& d) : dato(d), anterior(NULL), siguiente(NULL) {};
-
-    T dato;
-    Nodo* anterior;
-    Nodo* siguiente;
-  };
-
-  Nodo* primero_;
-  Nat longitud_;
 };
 
 template<class T>

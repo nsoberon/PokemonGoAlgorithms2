@@ -13,159 +13,163 @@ using namespace std;
 
 template<typename T>
 class DiccString {
-        public:
-                /**
-                CONSTRUCTOR
-                * Construye un diccionario vacio.
-                **/
-                DiccString();
+
+  private:
+
+      struct ClaveSignificado{
+          aed2::String clave;
+          T significado;
+          ClaveSignificado(aed2::String c, T s){
+            clave = c;
+            significado = s;
+          }
+
+          bool operator == (const ClaveSignificado & t) const
+          {
+            return ( clave == t.clave )  && ( significado == t.significado );
+          }
 
 
-                /**
-                DESTRUCTOR
-                **/
-                ~DiccString();
+      };
 
-                void vaciar();
+      struct Nodo{
+          Nodo** siguientes;
+          T* significado;
+          aed2::Nat cantidadSiguientes;
+          typename aed2::Conj<ClaveSignificado>::Iterador posicionClaves;
+          Nodo(){
+            siguientes = new Nodo*[256];
+            for (int i = 0; i < 256; i++){
+              siguientes[i] = NULL;
+            }
+            significado = NULL;
+            cantidadSiguientes = 0;
+          }
+          ~Nodo(){
+            delete significado;
+            delete [] siguientes;
+          }
+      };
 
-                void vacio();
+      //TODO: funciones auxiliares
 
-                /**
-                DEFINIR
-                * Recibe una clave con su significado de tipo T y la define.
-                * Si ya estaba definida, la reescribe.
-                **/
-                void Definir(const string& clave, const T& significado);
+      Nodo* raiz;
+      aed2::Conj<ClaveSignificado> claves;
 
-                /**
-                DEFINIDO?
-                * Devuelve un bool, que es true si la clave pasada está definida en
-                * el diccionario.
-                **/
-                bool Definido(const string& clave) const;
+      Nodo* buscarNodo(string);
+      bool borrarRama(Nodo*, int, string);
 
-                /**
-                OBTENER
-                * Dada una clave, devuelve su significado.
-                * PRE: La clave está definida.
-                --PRODUCE ALIASING--
-        -- Versión modificable y no modificable
-                **/
-                const T& Obtener(const string& clave) const;
-                T& Obtener(const string& clave);
-
-                /**
-                BORRAR
-                * Dada una clave, la borra del diccionario junto a su significado.
-                * PRE: La clave está definida.
-                --PRODUCE ALIASING--
-                **/
-                void Borrar(const string& clave);
+      public:
+              /**
+              CONSTRUCTOR
+              * Construye un diccionario vacio.
+              **/
+              DiccString();
 
 
-                /**
-                CLAVES
-                * Devuelve las claves del diccionario.
-                --NO PRODUCE ALIASING--
-                **/
-                aed2::Conj<typename DiccString<T>::ClaveSignificado> Claves() const;
+              /**
+              DESTRUCTOR
+              **/
+              ~DiccString();
+
+              void vaciar();
+
+              void vacio();
+
+              /**
+              DEFINIR
+              * Recibe una clave con su significado de tipo T y la define.
+              * Si ya estaba definida, la reescribe.
+              **/
+              void Definir(const string& clave, const T& significado);
+
+              /**
+              DEFINIDO?
+              * Devuelve un bool, que es true si la clave pasada está definida en
+              * el diccionario.
+              **/
+              bool Definido(const string& clave) const;
+
+              /**
+              OBTENER
+              * Dada una clave, devuelve su significado.
+              * PRE: La clave está definida.
+              --PRODUCE ALIASING--
+      -- Versión modificable y no modificable
+              **/
+              const T& Obtener(const string& clave) const;
+              T& Obtener(const string& clave);
+
+              /**
+              BORRAR
+              * Dada una clave, la borra del diccionario junto a su significado.
+              * PRE: La clave está definida.
+              --PRODUCE ALIASING--
+              **/
+              void Borrar(const string& clave);
 
 
-                DiccString<T>& operator = (const DiccString<T> & c);
-
-                bool operator == (const DiccString<T> & c);
-
-
-                //ITERADOR
-
-
-                class Iterador
-                {
-                  public:
-
-                    Iterador();
-                    ~Iterador();
-                    bool HaySiguiente();
-                    typename DiccString<T>::ClaveSignificado Siguiente();
-                    void Avanzar();
-                    void EliminarSiguiente();
-
-                  private:
-
-                    typename aed2::Conj<typename DiccString<T>::ClaveSignificado>::Iterador it_dicc_;
-                    Iterador(DiccString<T>& c);
-                    friend class DiccString<T>;
-                    friend class DiccString<T>::const_Iterador;
-                };
-
-                Iterador CrearIt();
+              /**
+              CLAVES
+              * Devuelve las claves del diccionario.
+              --NO PRODUCE ALIASING--
+              **/
+              aed2::Conj<typename DiccString<T>::ClaveSignificado> Claves() const;
 
 
-                class const_Iterador
-                {
-                  public:
+              DiccString<T>& operator = (const DiccString<T> & c);
 
-                    const_Iterador();
-                    ~const_Iterador();
-                    bool HaySiguiente();
-                    typename DiccString<T>::ClaveSignificado Siguiente();
-                    void Avanzar();
-
-                  private:
-
-                    typename aed2::Conj<typename DiccString<T>::ClaveSignificado>::const_Iterador it_dicc_;
-                    const_Iterador(const DiccString<T>& c);
-                    friend class DiccString<T>;
-                    friend typename DiccString<T>::const_Iterador DiccString<T>::CrearIt() const;
-
-                };
-
-                const_Iterador CrearIt() const;
-
-        private:
-
-                struct ClaveSignificado{
-                    aed2::String clave;
-                    T significado;
-                    ClaveSignificado(aed2::String c, T s){
-                        clave = c;
-                        significado = s;
-                    }
-
-                    bool operator == (const ClaveSignificado & t) const
-                    {
-                       return ( clave == t.clave )  && ( significado == t.significado );
-                    }
+              bool operator == (const DiccString<T> & c);
 
 
-                };
+              //ITERADOR
 
-                struct Nodo{
-                    Nodo** siguientes;
-                    T* significado;
-                    aed2::Nat cantidadSiguientes;
-                    typename aed2::Conj<ClaveSignificado>::Iterador posicionClaves;
-                    Nodo(){
-                        siguientes = new Nodo*[256];
-                        for (int i = 0; i < 256; i++){
-                            siguientes[i] = NULL;
-                        }
-                        significado = NULL;
-                        cantidadSiguientes = 0;
-                    }
-                    ~Nodo(){
-                        delete significado;
-                        delete [] siguientes;
-                    }
-                };
+              class const_Iterador
+              {
+              public:
 
-                //TODO: funciones auxiliares
+                  const_Iterador();
+                  ~const_Iterador();
+                  bool HaySiguiente();
+                  typename DiccString<T>::ClaveSignificado Siguiente();
+                  void Avanzar();
 
-                Nodo* raiz;
-                aed2::Conj<ClaveSignificado> claves;
+              private:
 
-                Nodo* buscarNodo(string);
-                bool borrarRama(Nodo*, int, string);
+                  typename aed2::Conj<typename DiccString<T>::ClaveSignificado>::const_Iterador it_dicc_;
+                  const_Iterador(const DiccString<T>& c);
+                  friend class DiccString<T>;
+                  friend typename DiccString<T>::const_Iterador DiccString<T>::CrearIt() const;
+
+              };
+
+              class Iterador
+              {
+                public:
+
+                  Iterador();
+                  ~Iterador();
+                  bool HaySiguiente();
+                  typename DiccString<T>::ClaveSignificado Siguiente();
+                  void Avanzar();
+                  void EliminarSiguiente();
+
+                private:
+
+                  typename aed2::Conj<typename DiccString<T>::ClaveSignificado>::Iterador it_dicc_;
+                  Iterador(DiccString<T>& c);
+                  friend class DiccString<T>;
+                  friend class DiccString<T>::const_Iterador;
+              };
+
+              Iterador CrearIt();
+
+
+
+
+              const_Iterador CrearIt() const;
+
+
 
 };
 
