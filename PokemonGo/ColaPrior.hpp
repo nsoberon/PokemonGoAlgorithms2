@@ -243,7 +243,6 @@ ColaPrior<T>::Iterador::Iterador(){}
 
 template< typename T>
 typename ColaPrior<T>::Iterador ColaPrior<T>::CrearIterador(ColaPrior<T>::Nodo* n){
-    //ColaPrior<T>::Iterador* res = new ColaPrior<T>::Iterador();
     ColaPrior<T>::Iterador res;
     res.siguiente = n;
     res.cola = this;
@@ -252,7 +251,6 @@ typename ColaPrior<T>::Iterador ColaPrior<T>::CrearIterador(ColaPrior<T>::Nodo* 
 
 template< typename T>
 void ColaPrior<T>::Iterador::EliminarSiguiente(){
-    //Nodo* ultimo = this->cola->ultimoNodo();
     Nodo* elem = this->siguiente;
     if(elem == this->cola->cabeza){
         this->cola->Desencolar();
@@ -324,22 +322,6 @@ typename ColaPrior<T>::Nodo* ColaPrior<T>::ultimoNodo(){
 template< typename T>
 typename ColaPrior<T>::Nodo* ColaPrior<T>::ultimoPadre(){
     Nodo* ultimo = this->ultimoNodo();
-
-    /*if(ultimo == this->cabeza){
-        return ultimo;
-    }else if(this->tam == 2){
-        return ultimo->padre;
-    }else{
-        Nodo* actual = ultimo;
-        while(actual != this->cabeza && actual->padre->der == actual && actual->der != ultimo){
-            if(actual->izq != ultimo){
-                actual = actual->izq;
-            }else{
-                break;
-            }
-        }
-        return actual;
-    }*/
     if(ultimo == this->cabeza){
         return ultimo;
     }else{

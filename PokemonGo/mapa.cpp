@@ -11,6 +11,7 @@ Mapa::~Mapa(){
 }
 
 void Mapa::crearMapa(){
+    // Inicializa un mapa vacio
     aed2::Arreglo<aed2::Arreglo<aed2::Nat> >(1);
     aed2::Arreglo<aed2::Arreglo<aed2::Nat> > matriz = aed2::Arreglo<aed2::Arreglo<aed2::Nat> >(1);
     matriz.Definir(0,aed2::Arreglo<aed2::Nat>(1));
@@ -21,6 +22,8 @@ void Mapa::crearMapa(){
     }
 
 void Mapa::agregarCoor(Coordenada c){
+    // Chequea si cambia la latitud y longitud maxima
+    // En caso de que cambie guarda los nuevos valores
     bool cambioLatitud = false;
     bool cambioLongitud = false;
     if(c.latitud() > this->latitudMax){
@@ -31,6 +34,7 @@ void Mapa::agregarCoor(Coordenada c){
         this->longitudMax = c.longitud();
         cambioLongitud = true;
     }
+    // Si cambio latitud o longitud, redimensiona la matriz de caminos del mapa
     if(cambioLongitud){
         this->matrizCaminos.Redimensionar(c.longitud() + 1);
         if(cambioLatitud){
@@ -63,6 +67,7 @@ void Mapa::agregarCoor(Coordenada c){
             }
         }
     }
+    // Todas las posiciones de la matriz que no estan definidas, las define con un 0
     for(aed2::Nat i = 0; i < this->matrizCaminos.Tamanho(); i ++){
         for(aed2::Nat j = 0; j < this->matrizCaminos[i].Tamanho(); j++){
             if(!this->matrizCaminos[i].Definido(j)){
@@ -70,6 +75,8 @@ void Mapa::agregarCoor(Coordenada c){
             }
         }
     }
+    // Mira si la coordenada que agrego tiene vecinos
+    // En caso de que tenga, forma las clases de equivalencia teniendo en cuenta la nueva coordenada
     aed2::Arreglo<aed2::Nat> vecinosCoor = this->vecinos(c);
     if(vecinosCoor.Tamanho() == 0){
         this->matrizCaminos[c.longitud()][c.latitud()] = this->marca;
@@ -80,6 +87,7 @@ void Mapa::agregarCoor(Coordenada c){
         this->marcarVecinos(vecinosCoor[0], vecinosCoor);
         this->matrizCaminos[c.longitud()][c.latitud()] = vecinosCoor[0];
     }
+    // Agrega la coordenada  a las coordenadas del mapa
     this->coordenadasM.Agregar(c);
 }
 
@@ -90,6 +98,7 @@ aed2::Conj<Coordenada> Mapa::coordenadas(){
 
 bool Mapa::posExistente(Coordenada c) const{
     bool res = false;
+    // Recorre todas las coordenadas del mapa y se fija si esta c
     aed2::Conj<Coordenada>::const_Iterador itConj = this->coordenadasM.CrearIt();
     while(itConj.HaySiguiente()){
         if(itConj.Siguiente() == c){
@@ -102,6 +111,7 @@ bool Mapa::posExistente(Coordenada c) const{
 
 bool Mapa::hayCamino(Coordenada c, Coordenada c1) const{
     assert(this->posExistente(c) && this->posExistente(c1));
+    // Mira si las dos coordenadas pertenecen a la misma clase de equivalencia
     return this->matrizCaminos[c.longitud()][c.latitud()] == this->matrizCaminos[c1.longitud()][c1.latitud()];
 }
 
@@ -116,6 +126,7 @@ aed2::Nat Mapa::maximaLongitud(){
 
 aed2::Arreglo<aed2::Nat> Mapa::vecinos(Coordenada c){
     aed2::Lista<Coordenada> vecinos;
+    // Mira las 4 coordenadas vecinas, y se fija si son posiciones existentes del mapa
     if(this->posExistente(c.coordenadaArriba())){
         vecinos.AgregarAtras(c.coordenadaArriba());
     }
@@ -131,6 +142,7 @@ aed2::Arreglo<aed2::Nat> Mapa::vecinos(Coordenada c){
     aed2::Arreglo<aed2::Nat> res = aed2::Arreglo<aed2::Nat> (vecinos.Longitud());
     aed2::Lista<Coordenada>::Iterador itVecinos = vecinos.CrearIt();
     aed2::Nat i = 0;
+    // Crea un arreglo con los vecinos de la coordenada
     while(itVecinos.HaySiguiente()){
         aed2::Nat lat = itVecinos.Siguiente().latitud();
         aed2::Nat lon = itVecinos.Siguiente().longitud();
@@ -144,6 +156,8 @@ aed2::Arreglo<aed2::Nat> Mapa::vecinos(Coordenada c){
 
 void Mapa::marcarVecinos(aed2::Nat color, aed2::Arreglo<aed2::Nat> pinto){
     Coordenada c;
+    // Recorre todas las posiciones de la matriz de caminos del mapa
+    // Marca las que son iguales a "pinto" con "color"
     for(aed2::Nat i = 0; i < this->matrizCaminos.Tamanho(); i++){
         for(aed2::Nat j = 0; j < this->matrizCaminos[i].Tamanho(); j++){
             c.crearCoor(j,i);

@@ -68,7 +68,7 @@ class DiccString {
                 * Devuelve las claves del diccionario.
                 --NO PRODUCE ALIASING--
                 **/
-                aed2::Conj<typename DiccString<T>::Tupla> Claves() const;
+                aed2::Conj<typename DiccString<T>::ClaveSignificado> Claves() const;
 
 
                 DiccString<T>& operator = (const DiccString<T> & c);
@@ -86,13 +86,13 @@ class DiccString {
                     Iterador();
                     ~Iterador();
                     bool HaySiguiente();
-                    typename DiccString<T>::Tupla Siguiente();
+                    typename DiccString<T>::ClaveSignificado Siguiente();
                     void Avanzar();
                     void EliminarSiguiente();
 
                   private:
 
-                    typename aed2::Conj<typename DiccString<T>::Tupla>::Iterador it_dicc_;
+                    typename aed2::Conj<typename DiccString<T>::ClaveSignificado>::Iterador it_dicc_;
                     Iterador(DiccString<T>& c);
                     friend class DiccString<T>;
                     friend class DiccString<T>::const_Iterador;
@@ -108,12 +108,12 @@ class DiccString {
                     const_Iterador();
                     ~const_Iterador();
                     bool HaySiguiente();
-                    typename DiccString<T>::Tupla Siguiente();
+                    typename DiccString<T>::ClaveSignificado Siguiente();
                     void Avanzar();
 
                   private:
 
-                    typename aed2::Conj<typename DiccString<T>::Tupla>::const_Iterador it_dicc_;
+                    typename aed2::Conj<typename DiccString<T>::ClaveSignificado>::const_Iterador it_dicc_;
                     const_Iterador(const DiccString<T>& c);
                     friend class DiccString<T>;
                     friend typename DiccString<T>::const_Iterador DiccString<T>::CrearIt() const;
@@ -124,15 +124,15 @@ class DiccString {
 
         private:
 
-                struct Tupla{
+                struct ClaveSignificado{
                     aed2::String clave;
                     T significado;
-                    Tupla(aed2::String c, T s){
+                    ClaveSignificado(aed2::String c, T s){
                         clave = c;
                         significado = s;
                     }
 
-                    bool operator == (const Tupla & t) const
+                    bool operator == (const ClaveSignificado & t) const
                     {
                        return ( clave == t.clave )  && ( significado == t.significado );
                     }
@@ -144,7 +144,7 @@ class DiccString {
                     Nodo** siguientes;
                     T* significado;
                     aed2::Nat cantidadSiguientes;
-                    typename aed2::Conj<Tupla>::Iterador posicionClaves;
+                    typename aed2::Conj<ClaveSignificado>::Iterador posicionClaves;
                     Nodo(){
                         siguientes = new Nodo*[256];
                         for (int i = 0; i < 256; i++){
@@ -162,7 +162,7 @@ class DiccString {
                 //TODO: funciones auxiliares
 
                 Nodo* raiz;
-                aed2::Conj<Tupla> claves;
+                aed2::Conj<ClaveSignificado> claves;
 
                 Nodo* buscarNodo(string);
                 bool borrarRama(Nodo*, int, string);
@@ -202,12 +202,12 @@ bool DiccString<T>::const_Iterador::HaySiguiente(){
 }
 
 template <typename T>
-typename DiccString<T>::Tupla DiccString<T>::Iterador::Siguiente(){
+typename DiccString<T>::ClaveSignificado DiccString<T>::Iterador::Siguiente(){
     return it_dicc_.Siguiente();
 }
 
 template <typename T>
-typename DiccString<T>::Tupla DiccString<T>::const_Iterador::Siguiente(){
+typename DiccString<T>::ClaveSignificado DiccString<T>::const_Iterador::Siguiente(){
     return it_dicc_.Siguiente();
 }
 
@@ -277,8 +277,8 @@ DiccString<T>::~DiccString(){
 
 template <typename T>
 void DiccString<T>::vaciar(){
-    aed2::Conj<Tupla> test(this->claves);
-    typename aed2::Conj<Tupla>::const_Iterador itConj = test.CrearIt();
+    aed2::Conj<ClaveSignificado> test(this->claves);
+    typename aed2::Conj<ClaveSignificado>::const_Iterador itConj = test.CrearIt();
     while(itConj.HaySiguiente()){
         this->Borrar(itConj.Siguiente().clave);
         itConj.Avanzar();
@@ -288,11 +288,11 @@ void DiccString<T>::vaciar(){
 template <typename T>
 void DiccString<T>::vacio(){
 
-    this->claves = aed2::Conj<Tupla>();
+    this->claves = aed2::Conj<ClaveSignificado>();
 }
 
 template <typename T>
-aed2::Conj<typename DiccString<T>::Tupla> DiccString<T>::Claves() const{
+aed2::Conj<typename DiccString<T>::ClaveSignificado> DiccString<T>::Claves() const{
     return this->claves;
 }
 
@@ -322,7 +322,7 @@ void DiccString<T>::Definir(const string& clave, const T& significado){
     if(actual->posicionClaves.HaySiguiente()){
         actual->posicionClaves.EliminarSiguiente();
     }
-    actual->posicionClaves = this->claves.AgregarRapido(DiccString<T>::Tupla(clave, significado));
+    actual->posicionClaves = this->claves.AgregarRapido(DiccString<T>::ClaveSignificado(clave, significado));
     actual->significado = new T(significado);
 }
 
@@ -352,8 +352,8 @@ template <typename T>
 T& DiccString<T>::Obtener(const string& clave) {
     Nodo* actual;
     actual = this->raiz;
-    int i = 0;
-    int claveLength = clave.length();
+    aed2::Nat i = 0;
+    aed2::Nat claveLength = clave.length();
     while(i < claveLength){
         actual = actual->siguientes[int(clave[i])];
         i++;
@@ -366,8 +366,8 @@ template <typename T>
 const T& DiccString<T>::Obtener(const string& clave) const {
     Nodo* actual;
     actual = this->raiz;
-    int i = 0;
-    int claveLength = clave.length();
+    aed2::Nat i = 0;
+    aed2::Nat claveLength = clave.length();
     while(i < claveLength){
         actual = actual->siguientes[int(clave[i])];
         i++;
@@ -381,7 +381,7 @@ void DiccString<T>::Borrar(const string& clave) {
     bool empiezoABorrar = false;
     Nodo* actual = this->raiz;
     Nodo* siguiente;
-    int i = 0;
+    aed2::Nat i = 0;
     // Miro si tengo un solo elemento en el trie, lo borro y asigno la raiz NULL
     if(clavesTrie == 1){
         while(i < clave.length()){
@@ -478,8 +478,8 @@ template <typename T>
 typename DiccString<T>::Nodo* DiccString<T>::buscarNodo(string clave){
         Nodo* actual;
         actual = this->raiz;
-        int i = 0;
-        int claveLength = clave.length();
+        aed2::Nat i = 0;
+        aed2::Nat claveLength = clave.length();
         while(i < claveLength){
             actual = actual->siguientes[int(clave[i])];
             i++;
